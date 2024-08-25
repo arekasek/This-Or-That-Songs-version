@@ -4,10 +4,11 @@ export async function GET() {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   const tokenUrl = "https://accounts.spotify.com/api/token";
-  const playlistId = "748Q8znXiHWpL0uFZEMjR5"; // ID for your specific playlist
+  const playlistId = "748Q8znXiHWpL0uFZEMjR5";
   const playlistUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
   try {
+    // Fetch the access token
     const tokenResponse = await axios.post(
       tokenUrl,
       "grant_type=client_credentials",
@@ -28,14 +29,13 @@ export async function GET() {
         Authorization: `Bearer ${access_token}`,
       },
       params: {
-        limit: 100, // Maximum limit for fetching tracks in one request
+        limit: 100,
       },
     });
 
     const tracks = playlistResponse.data.items;
 
-    const shuffledTracks = tracks.sort(() => 0.5 - Math.random());
-
+    const shuffledTracks = [...tracks].sort(() => 0.5 - Math.random());
     const topTracks = shuffledTracks.slice(0, 16).map((item) => ({
       id: item.track.id,
       name: item.track.name,
@@ -46,7 +46,12 @@ export async function GET() {
     }));
 
     if (topTracks.length === 16) {
-      return new Response(JSON.stringify(topTracks), { status: 200 });
+      return new Response(JSON.stringify(topTracks), {
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store",
+        },
+      });
     } else {
       return new Response("Not enough tracks found", { status: 404 });
     }
