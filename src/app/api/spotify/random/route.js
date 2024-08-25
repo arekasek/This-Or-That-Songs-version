@@ -33,25 +33,18 @@ export async function GET() {
         },
       });
 
-      allTracks = allTracks.concat(playlistResponse.data.items);
+      allTracks = [...allTracks, ...playlistResponse.data.items];
       nextUrl = playlistResponse.data.next;
     }
 
-    if (allTracks.length === 0) {
-      return new Response("No tracks found in the playlist", { status: 404 });
-    }
-
-    const shuffledTracks = allTracks
-      .map((item) => item.track) // Ensure we only have track objects
-      .sort(() => 0.5 - Math.random());
-
-    const topTracks = shuffledTracks.slice(0, 16).map((track) => ({
-      id: track.id,
-      name: track.name,
-      artists: track.artists,
-      album: track.album,
-      preview_url: track.preview_url,
-      external_urls: track.external_urls,
+    const shuffledTracks = allTracks.sort(() => 0.5 - Math.random());
+    const topTracks = shuffledTracks.slice(0, 16).map((item) => ({
+      id: item.track.id,
+      name: item.track.name,
+      artists: item.track.artists,
+      album: item.track.album,
+      preview_url: item.track.preview_url,
+      external_urls: item.track.external_urls,
     }));
 
     return new Response(JSON.stringify(topTracks), {
