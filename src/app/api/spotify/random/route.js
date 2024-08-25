@@ -23,31 +23,31 @@ export async function GET() {
 
     const { access_token } = tokenResponse.data;
 
-    let allTracks = [];
-    let nextUrl = playlistUrl;
+    const playlistResponse = await axios.get(playlistUrl, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+      params: {
+        limit: 100, // Pobierz więcej niż 16, jeśli chcesz mieć większy zakres losowania
+      },
+    });
 
-    while (nextUrl) {
-      const playlistResponse = await axios.get(nextUrl, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-      });
+    const tracks = playlistResponse.data.items;
 
-      allTracks = [...allTracks, ...playlistResponse.data.items];
-      nextUrl = playlistResponse.data.next;
-    }
+    // Losowanie 16 piosenek
+    const shuffledTracks = tracks
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 16)
+      .map((item) => ({
+        id: item.track.id,
+        name: item.track.name,
+        artists: item.track.artists,
+        album: item.track.album,
+        preview_url: item.track.preview_url,
+        external_urls: item.track.external_urls,
+      }));
 
-    const shuffledTracks = allTracks.sort(() => 0.5 - Math.random());
-    const topTracks = shuffledTracks.slice(0, 16).map((item) => ({
-      id: item.track.id,
-      name: item.track.name,
-      artists: item.track.artists,
-      album: item.track.album,
-      preview_url: item.track.preview_url,
-      external_urls: item.track.external_urls,
-    }));
-
-    return new Response(JSON.stringify(topTracks), {
+    return new Response(JSON.stringify(shuffledTracks), {
       status: 200,
       headers: {
         "Cache-Control": "no-store",
