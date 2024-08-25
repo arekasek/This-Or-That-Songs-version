@@ -6,9 +6,18 @@ export default function Home() {
   const router = useRouter();
   const [categorySelected, setCategorySelected] = useState(false);
 
-  const handleSelectCategory = () => {
+  const handleSelectCategory = async () => {
     setCategorySelected(true);
-    router.push("/tournament");
+
+    try {
+      const response = await fetch("/api/spotify/random");
+      if (!response.ok) throw new Error("Failed to fetch tracks");
+
+      router.push("/tournament");
+    } catch (err) {
+      console.error("Error fetching tracks:", err);
+      setCategorySelected(false);
+    }
   };
 
   return (
