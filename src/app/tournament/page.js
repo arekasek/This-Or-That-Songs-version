@@ -15,6 +15,7 @@ export default function Tournament() {
     fetchTracks();
   }, []);
 
+  // Fetch new tracks from the API
   const fetchTracks = async () => {
     try {
       const response = await fetch("/api/spotify/random");
@@ -31,6 +32,7 @@ export default function Tournament() {
     }
   };
 
+  // Generate new pairings for the tournament
   const generatePairings = (tracks) => {
     const shuffledTracks = tracks.sort(() => 0.5 - Math.random());
     const numPairs = Math.floor(shuffledTracks.length / 2);
@@ -44,6 +46,7 @@ export default function Tournament() {
     setCurrentPairIndex(0);
   };
 
+  // Get the label for the current round
   const getRoundLabel = () => {
     switch (round) {
       case 1:
@@ -59,6 +62,7 @@ export default function Tournament() {
     }
   };
 
+  // Handle the selection of a winner
   const handleSelection = (winner) => {
     stopPreview();
 
@@ -87,6 +91,7 @@ export default function Tournament() {
     setSelectedTracks(updatedSelectedTracks);
   };
 
+  // Play a track preview
   const playPreview = (previewUrl) => {
     if (audioRef.current) {
       audioRef.current.src = previewUrl;
@@ -95,12 +100,18 @@ export default function Tournament() {
     }
   };
 
+  // Stop the track preview
   const stopPreview = () => {
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current.src = "";
       setPlayingTrack(null);
     }
+  };
+
+  // Refresh the page to get new tracks
+  const refreshTracks = () => {
+    fetchTracks(); // Fetch new tracks
   };
 
   const currentPair = pairings[currentPairIndex];
@@ -110,6 +121,12 @@ export default function Tournament() {
       <h1 className="text-3xl font-bold mb-6 text-center">
         Music Tournament - {getRoundLabel()}
       </h1>
+      <button
+        className="px-6 py-3 bg-green-500 text-white rounded-md hover:bg-green-600 mb-4"
+        onClick={refreshTracks}
+      >
+        Refresh Songs
+      </button>
       {currentPair ? (
         <div className="flex flex-col md:flex-row justify-center mb-6">
           {currentPair.map((track) => (
