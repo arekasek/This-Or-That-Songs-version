@@ -4,7 +4,7 @@ export async function GET() {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   const tokenUrl = "https://accounts.spotify.com/api/token";
-  const playlistId = "748Q8znXiHWpL0uFZEMjR5"; // ID for your specific playlist
+  const playlistId = "748Q8znXiHWpL0uFZEMjR5";
   const playlistUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
   try {
@@ -22,43 +22,46 @@ export async function GET() {
     );
 
     const { access_token } = tokenResponse.data;
-    const playlistResponse = await axios.get(playlistUrl, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-      params: {
-        limit: 100,
-      },
-    });
 
-    const tracks = playlistResponse.data.items;
+    let allTracks = [];
+    let nextUrl = playlistUrl;
 
-    const shuffledTracks = tracks.sort(() => 0.5 - Math.random());
-
-    const topTracks = shuffledTracks.slice(0, 16).map((item) => ({
-      id: item.track.id,
-      name: item.track.name,
-      artists: item.track.artists,
-      album: item.track.album,
-      preview_url: item.track.preview_url,
-      external_urls: item.track.external_urls,
-    }));
-
-    if (topTracks.length === 16) {
-      return new Response(JSON.stringify(topTracks), {
-        status: 200,
+    while (nextUrl) {
+      const playlistResponse = await axios.get(nextUrl, {
         headers: {
-          "Cache-Control": "no-store",
+          Authorization: `Bearer ${access_token}`,
         },
       });
-    } else {
-      return new Response("Not enough tracks found", { status: 404 });
+
+      allTracks = allTracks.concat(playlistResponse.data.items);
+      nextUrl = playlistResponse.data.next;
     }
+
+    if (allTracks.length === 0) {
+      return new Response("No tracks found in the playlist", { status: 404 });
+    }
+
+    const shuffledTracks = allTracks
+      .map((item) => item.track) // Ensure we only have track objects
+      .sort(() => 0.5 - Math.random());
+
+    const topTracks = shuffledTracks.slice(0, 16).map((track) => ({
+      id: track.id,
+      name: track.name,
+      artists: track.artists,
+      album: track.album,
+      preview_url: track.preview_url,
+      external_urls: track.external_urls,
+    }));
+
+    return new Response(JSON.stringify(topTracks), {
+      status: 200,
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
-    console.error(
-      "Error fetching tracks from playlist:",
-      error.message || error
-    );
+    console.error("Error fetching tracks from playlist:", error);
     return new Response("Failed to fetch tracks from playlist", {
       status: 500,
     });

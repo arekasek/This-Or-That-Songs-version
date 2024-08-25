@@ -20,8 +20,8 @@ export default function Tournament() {
       const response = await fetch("/api/spotify/random");
       if (!response.ok) throw new Error("Failed to fetch tracks");
       const data = await response.json();
-      if (data.length < 16) {
-        throw new Error("Not enough tracks fetched");
+      if (!Array.isArray(data) || data.length < 16) {
+        throw new Error("Not enough tracks fetched or invalid data format");
       }
       setTracks(data);
       setRound(1);
@@ -67,7 +67,6 @@ export default function Tournament() {
       (track) => track.id !== winner.id
     );
 
-    // Remove loser from tracks
     const nextRoundTracks = tracks.filter((track) => track.id !== loser.id);
 
     if (nextRoundTracks.length <= 1) {
