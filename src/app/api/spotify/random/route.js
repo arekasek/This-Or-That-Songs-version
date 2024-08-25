@@ -8,7 +8,6 @@ export async function GET() {
   const playlistUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
   try {
-    // Uzyskanie tokenu dostępu
     const tokenResponse = await axios.post(
       tokenUrl,
       "grant_type=client_credentials",
@@ -23,20 +22,16 @@ export async function GET() {
     );
 
     const { access_token } = tokenResponse.data;
-
-    // Pobranie piosenek z playlisty
     const playlistResponse = await axios.get(playlistUrl, {
       headers: {
         Authorization: `Bearer ${access_token}`,
       },
       params: {
-        limit: 100, // Pobierz wszystkie piosenki, jeśli playlist jest duża
+        limit: 100,
       },
     });
 
     const tracks = playlistResponse.data.items;
-
-    // Losowanie 16 piosenek
     const shuffledTracks = tracks
       .sort(() => 0.5 - Math.random())
       .slice(0, 16)
@@ -52,7 +47,7 @@ export async function GET() {
     return new Response(JSON.stringify(shuffledTracks), {
       status: 200,
       headers: {
-        "Cache-Control": "no-store", // Zapewnia, że odpowiedź nie jest cachowana
+        "Cache-Control": "no-store",
       },
     });
   } catch (error) {

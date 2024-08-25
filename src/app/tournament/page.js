@@ -17,7 +17,7 @@ export default function Tournament() {
 
   const fetchTracks = async () => {
     try {
-      const response = await fetch("/api/spotify/random"); // API do losowania piosenek
+      const response = await fetch("/api/spotify/random");
       if (!response.ok) throw new Error("Failed to fetch tracks");
       const data = await response.json();
       if (!Array.isArray(data) || data.length < 16) {
