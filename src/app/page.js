@@ -20,7 +20,8 @@ export default function Home() {
 
   const fetchTracks = async () => {
     try {
-      const response = await fetch("/api/spotify/random");
+      const timestamp = new Date().getTime();
+      const response = await fetch(`/api/spotify/random?t=${timestamp}`);
       if (!response.ok) throw new Error("Failed to fetch tracks");
       const data = await response.json();
       if (data.length < 16) {

@@ -8,7 +8,6 @@ export async function GET() {
   const playlistUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
   try {
-    // Fetch the access token
     const tokenResponse = await axios.post(
       tokenUrl,
       "grant_type=client_credentials",
@@ -23,8 +22,6 @@ export async function GET() {
     );
 
     const { access_token } = tokenResponse.data;
-
-    // Fetch the playlist tracks
     const playlistResponse = await axios.get(playlistUrl, {
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -67,3 +64,4 @@ export async function GET() {
     });
   }
 }
+s;
