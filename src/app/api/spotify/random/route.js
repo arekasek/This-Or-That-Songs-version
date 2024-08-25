@@ -4,7 +4,7 @@ export async function GET() {
   const clientId = process.env.SPOTIFY_CLIENT_ID;
   const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
   const tokenUrl = "https://accounts.spotify.com/api/token";
-  const playlistId = "748Q8znXiHWpL0uFZEMjR5";
+  const playlistId = "748Q8znXiHWpL0uFZEMjR5"; // ID for your specific playlist
   const playlistUrl = `https://api.spotify.com/v1/playlists/${playlistId}/tracks`;
 
   try {
@@ -24,6 +24,7 @@ export async function GET() {
 
     const { access_token } = tokenResponse.data;
 
+    // Fetch the playlist tracks
     const playlistResponse = await axios.get(playlistUrl, {
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -35,7 +36,8 @@ export async function GET() {
 
     const tracks = playlistResponse.data.items;
 
-    const shuffledTracks = [...tracks].sort(() => 0.5 - Math.random());
+    const shuffledTracks = tracks.sort(() => 0.5 - Math.random());
+
     const topTracks = shuffledTracks.slice(0, 16).map((item) => ({
       id: item.track.id,
       name: item.track.name,
