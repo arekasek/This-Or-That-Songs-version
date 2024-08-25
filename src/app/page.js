@@ -24,7 +24,6 @@ export default function Home() {
           >
             Best Songs
           </button>
-          {/* Add more categories here if needed */}
         </div>
       ) : (
         <p className="text-lg text-gray-600">Redirecting...</p>
