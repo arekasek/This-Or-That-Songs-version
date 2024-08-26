@@ -1,32 +1,37 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 export default function GenrePage({ params }) {
   const { genre } = params;
   const router = useRouter();
   const [categorySelected, setCategorySelected] = useState(false);
   const [playlistImages, setPlaylistImages] = useState({});
+  const [loading, setLoading] = useState(true); // Stan ładowania
 
   useEffect(() => {
     const fetchPlaylistImages = async () => {
       try {
         const playlists = getPlaylistsByGenre(genre);
 
-        const imagePromises = playlists.map(async ({ id }) => {
-          try {
-            const response = await fetch(
-              `/api/spotify/playlistImage?playlistId=${id}`
-            );
-            if (!response.ok) throw new Error("Failed to fetch playlist image");
-            const data = await response.json();
-            return { id, image: data.image };
-          } catch (error) {
-            console.error(`Error fetching image for playlist ${id}:`, error);
-            return { id, image: "https://via.placeholder.com/300" };
-          }
+        // Tworzenie obietnic dla każdego zapytania
+        const imagePromises = playlists.map(({ id }) => {
+          const url = `/api/spotify/playlistImage?playlistId=${id}`;
+          return fetch(url)
+            .then((response) => {
+              if (!response.ok)
+                throw new Error("Failed to fetch playlist image");
+              return response.json();
+            })
+            .then((data) => ({ id, image: data.image }))
+            .catch((error) => {
+              console.error(`Error fetching image for playlist ${id}:`, error);
+              return { id, image: "https://via.placeholder.com/300" };
+            });
         });
 
+        // Oczekiwanie na zakończenie wszystkich obietnic
         const images = await Promise.all(imagePromises);
         const imagesMap = images.reduce((acc, { id, image }) => {
           acc[id] = image;
@@ -34,8 +39,10 @@ export default function GenrePage({ params }) {
         }, {});
 
         setPlaylistImages(imagesMap);
+        setLoading(false); // Ustaw stan ładowania na false po załadowaniu obrazków
       } catch (error) {
         console.error("Error fetching playlist images:", error);
+        setLoading(false); // Ustaw stan ładowania na false nawet w przypadku błędu
       }
     };
 
@@ -64,20 +71,20 @@ export default function GenrePage({ params }) {
       HipHop: [
         { id: "37i9dQZF1DZ06evO3CRVnO", label: "Playboi Carti" },
         { id: "37i9dQZF1DZ06evO0vGf4I", label: "Travis Scott" },
-        { id: "37i9dQZF1DZ06evO3nMr04", label: "Kanye West" },
+        { id: "37i9dQZF1DZ06evO1XGbvi", label: "Kanye West" },
         { id: "37i9dQZF1DX7QOv5kjbU68", label: "Drake" },
         { id: "37i9dQZF1DZ06evO4gTUOY", label: "Eminem" },
-        { id: "37i9dQZF1DZ06evO1XGbvi", label: "Jay-Z" },
-        { id: "37i9dQZF1DZ06evO1IPOOk", label: "Kendrick Lamar" },
+        { id: "37i9dQZF1DZ06evO1IPOOk", label: "Jay-Z" },
+        { id: "37i9dQZF1DZ06evO1Za1Q4", label: "Kendrick Lamar" },
         { id: "37i9dQZF1DZ06evO17QsVi", label: "2Pac" },
-        { id: "37i9dQZF1DZ06evO1Za1Q4", label: "50 Cent" },
+        { id: "37i9dQZF1DZ06evO359MM7", label: "50 Cent" },
         { id: "37i9dQZF1DZ06evO2crkgE", label: "Ice Cube" },
         { id: "37i9dQZF1DZ06evO3VkoW4", label: "Dr. Dre" },
         { id: "37i9dQZF1DZ06evO2ZpGiQ", label: "Lil Wayne" },
         { id: "37i9dQZF1DZ06evO2xmY3T", label: "Cardi B" },
-        { id: "37i9dQZF1DZ06evO2O09Hg", label: "Juice Wrld" },
-        { id: "37i9dQZF1DZ06evO0AnZXW", label: "XXXTENTACION" },
-        { id: "37i9dQZF1DZ06evO133u6s", label: "Future" },
+        { id: "37i9dQZF1DZ06evO0AnZXW", label: "Juice Wrld" },
+        { id: "37i9dQZF1DZ06evO1XGbvi", label: "XXXTENTACION" },
+        { id: "37i9dQZF1DZ06evO1aBeik", label: "Future" },
         { id: "37i9dQZF1DZ06evO3K21mU", label: "J Cole" },
         { id: "37i9dQZF1DZ06evO33svt5", label: "Doja Cat" },
         { id: "37i9dQZF1DZ06evO06Ki7m", label: "Metro Boomin" },
@@ -99,8 +106,6 @@ export default function GenrePage({ params }) {
         { id: "37i9dQZF1DZ06evO04TCIU", label: "Kid Cudi" },
         { id: "37i9dQZF1DZ06evO07bvXy", label: "Flo Rida" },
         { id: "37i9dQZF1DZ06evO4aKvZe", label: "Childish Gambino" },
-        { id: "37i9dQZF1DZ06evO4jkBCE", label: "Snoop Dogg" },
-        { id: "37i9dQZF1DZ06evO4k5U2c", label: "Rae Sremmurd" },
         { id: "37i9dQZF1DZ06evO2ZTWSp", label: "Lizzo" },
         { id: "37i9dQZF1DZ06evO39qAJG", label: "The Notorious BIG" },
         { id: "37i9dQZF1DZ06evO02KO6k", label: "Big Sean" },
@@ -113,7 +118,6 @@ export default function GenrePage({ params }) {
         { id: "37i9dQZF1DX1lHW2vbQwNN", label: "00s Hip-Hop" },
         { id: "37i9dQZF1DX97h7ftpNSYT", label: "2010s Hip-Hop" },
       ],
-
       Polska: [
         { id: "37i9dQZF1DX49bSMRljsho", label: "Hot Hity" },
         { id: "37i9dQZF1DX8J2l55TrZk6", label: "Hity wszechczasów" },
@@ -133,7 +137,6 @@ export default function GenrePage({ params }) {
     };
 
     const playlists = genrePlaylists[genre] || [];
-
     return playlists.sort((a, b) => a.label.localeCompare(b.label));
   };
 
@@ -141,7 +144,16 @@ export default function GenrePage({ params }) {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
-      {!categorySelected ? (
+      {loading ? (
+        <div className="flex items-center justify-center w-full h-full">
+          <div
+            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"
+            role="status"
+          >
+            <span className="sr-only">Loading...</span>
+          </div>
+        </div>
+      ) : !categorySelected ? (
         <>
           <h1 className="text-3xl font-bold mb-6 text-center">
             Select Playlist for {genre}
@@ -150,11 +162,11 @@ export default function GenrePage({ params }) {
             {playlists.map(({ id, label }) => (
               <div
                 key={id}
-                className="bg-blue-500 text-white rounded-md hover:bg-blue-600 mb-4 flex items-center flex-col"
+                className="bg-blue-500 text-white rounded-md hover:bg-blue-600 mb-4 flex items-center flex-col cursor-pointer"
                 onClick={() => handleSelectCategory(id)}
               >
-                <div className="w-full cursor-pointer">
-                  <img
+                <div className="w-full">
+                  <LazyLoadImage
                     src={
                       playlistImages[id] || "https://via.placeholder.com/300"
                     }
