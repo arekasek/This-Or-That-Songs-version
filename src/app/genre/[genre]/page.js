@@ -8,14 +8,13 @@ export default function GenrePage({ params }) {
   const router = useRouter();
   const [categorySelected, setCategorySelected] = useState(false);
   const [playlistImages, setPlaylistImages] = useState({});
-  const [loading, setLoading] = useState(true); // Stan ładowania
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlaylistImages = async () => {
       try {
         const playlists = getPlaylistsByGenre(genre);
 
-        // Tworzenie obietnic dla każdego zapytania
         const imagePromises = playlists.map(({ id }) => {
           const url = `/api/spotify/playlistImage?playlistId=${id}`;
           return fetch(url)
@@ -31,7 +30,6 @@ export default function GenrePage({ params }) {
             });
         });
 
-        // Oczekiwanie na zakończenie wszystkich obietnic
         const images = await Promise.all(imagePromises);
         const imagesMap = images.reduce((acc, { id, image }) => {
           acc[id] = image;
@@ -39,10 +37,10 @@ export default function GenrePage({ params }) {
         }, {});
 
         setPlaylistImages(imagesMap);
-        setLoading(false); // Ustaw stan ładowania na false po załadowaniu obrazków
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching playlist images:", error);
-        setLoading(false); // Ustaw stan ładowania na false nawet w przypadku błędu
+        setLoading(false);
       }
     };
 
@@ -170,7 +168,7 @@ export default function GenrePage({ params }) {
                     src={
                       playlistImages[id] || "https://via.placeholder.com/300"
                     }
-                    className="object-cover w-[200px] h-[200px] rounded-t-md"
+                    className="object-cover sm:w-[200px] sm:h-[200px] w-full h-full rounded-t-md"
                     alt={label}
                   />
                 </div>
