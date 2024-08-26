@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 
 export default function Tournament() {
+  const [allTracks, setAllTracks] = useState([]);
   const [tracks, setTracks] = useState([]);
   const [round, setRound] = useState(1);
   const [pairings, setPairings] = useState([]);
@@ -20,15 +21,24 @@ export default function Tournament() {
       const response = await fetch("/api/spotify/random");
       if (!response.ok) throw new Error("Failed to fetch tracks");
       const data = await response.json();
-      if (!Array.isArray(data) || data.length < 16) {
-        throw new Error("Not enough tracks fetched or invalid data format");
+      if (!Array.isArray(data)) {
+        throw new Error("Invalid data format");
       }
-      setTracks(data);
+
+      setAllTracks(data);
       setRound(1);
-      generatePairings(data);
+      selectRandomTracks(data);
     } catch (err) {
       console.error("Error fetching tracks:", err);
     }
+  };
+
+  const selectRandomTracks = (tracksList) => {
+    // Randomly select 16 tracks
+    const shuffledTracks = tracksList.sort(() => 0.5 - Math.random());
+    const selectedTracks = shuffledTracks.slice(0, 16);
+    setTracks(selectedTracks);
+    generatePairings(selectedTracks);
   };
 
   const generatePairings = (tracks) => {
@@ -79,7 +89,13 @@ export default function Tournament() {
     } else {
       setRound(round + 1);
       setSelectedTracks([]);
-      generatePairings(nextRoundTracks);
+
+      if (nextRoundTracks.length > 16) {
+        selectRandomTracks(nextRoundTracks);
+      } else {
+        generatePairings(nextRoundTracks);
+      }
+
       setCurrentPairIndex(0);
     }
 
@@ -154,7 +170,7 @@ export default function Tournament() {
       )}
       <audio ref={audioRef} />
       <button
-        onClick={fetchTracks}
+        onClick={() => selectRandomTracks(allTracks)}
         className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4"
       >
         Refresh Songs
