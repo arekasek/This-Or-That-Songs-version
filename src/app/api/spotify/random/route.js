@@ -23,28 +23,21 @@ export async function GET() {
 
     const { access_token } = tokenResponse.data;
 
-    let tracks = [];
+    let allTracks = [];
     let nextUrl = playlistUrl;
+    let limit = 100;
+
     while (nextUrl) {
       const playlistResponse = await axios.get(nextUrl, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
         params: {
-          limit: 100,
+          limit: limit,
         },
       });
 
-      tracks = tracks.concat(playlistResponse.data.items);
-      nextUrl = playlistResponse.data.next;
-    }
-
-    const shuffledTracks = tracks
-      .map((value) => ({ value, sort: Math.random() }))
-      .sort((a, b) => a.sort - b.sort)
-      .map(({ value }) => value)
-      .slice(0, 16)
-      .map((item) => ({
+      const tracks = playlistResponse.data.items.map((item) => ({
         id: item.track.id,
         name: item.track.name,
         artists: item.track.artists,
@@ -53,7 +46,11 @@ export async function GET() {
         external_urls: item.track.external_urls,
       }));
 
-    return new Response(JSON.stringify(shuffledTracks), {
+      allTracks = [...allTracks, ...tracks];
+      nextUrl = playlistResponse.data.next;
+    }
+
+    return new Response(JSON.stringify(allTracks), {
       status: 200,
       headers: {
         "Cache-Control": "no-store",
