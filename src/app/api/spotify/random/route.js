@@ -22,18 +22,27 @@ export async function GET() {
     );
 
     const { access_token } = tokenResponse.data;
-    const playlistResponse = await axios.get(playlistUrl, {
-      headers: {
-        Authorization: `Bearer ${access_token}`,
-      },
-      params: {
-        limit: 100,
-      },
-    });
 
-    const tracks = playlistResponse.data.items;
+    let tracks = [];
+    let nextUrl = playlistUrl;
+    while (nextUrl) {
+      const playlistResponse = await axios.get(nextUrl, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        params: {
+          limit: 100,
+        },
+      });
+
+      tracks = tracks.concat(playlistResponse.data.items);
+      nextUrl = playlistResponse.data.next;
+    }
+
     const shuffledTracks = tracks
-      .sort(() => 0.5 - Math.random())
+      .map((value) => ({ value, sort: Math.random() }))
+      .sort((a, b) => a.sort - b.sort)
+      .map(({ value }) => value)
       .slice(0, 16)
       .map((item) => ({
         id: item.track.id,
