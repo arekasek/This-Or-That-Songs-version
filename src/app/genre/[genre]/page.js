@@ -55,14 +55,8 @@ export default function GenrePage({ params }) {
 
   const getPlaylistsByGenre = (genre) => {
     const genrePlaylists = {
-      Pop: [
-        { id: "37i9dQZF1DZ06evO4bwDxS", label: "Sabrina Carpenter" },
-        { id: "37i9dQZF1DX5KpP2LN299J", label: "Taylor Swift" },
-      ],
-      Trends: [
-        { id: "37i9dQZF1DZ06evO4bwDxS", label: "Top Hits" },
-        { id: "37i9dQZF1DXcBWIGoYBM5M", label: "Today's Hits" },
-      ],
+      Pop: [{ id: "37i9dQZF1DX5KpP2LN299J", label: "Taylor Swift" }],
+      Trends: [{ id: "37i9dQZF1DZ06evO4bwDxS", label: "Top Hits" }],
       Rock: [
         { id: "37i9dQZF1DWXRqgorJj26U", label: "Rock Classics" },
         { id: "37i9dQZF1DXcF6B6QPhFDv", label: "Alternative 90s" },
