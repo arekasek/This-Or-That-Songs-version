@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Tournament() {
   const [allTracks, setAllTracks] = useState([]);
@@ -9,16 +10,20 @@ export default function Tournament() {
   const [currentPairIndex, setCurrentPairIndex] = useState(0);
   const [selectedTracks, setSelectedTracks] = useState([]);
   const [playingTrack, setPlayingTrack] = useState(null);
-
+  const router = useRouter();
   const audioRef = useRef(null);
 
   useEffect(() => {
-    fetchTracks();
+    const query = new URLSearchParams(window.location.search);
+    const playlistId = query.get("playlistId");
+    fetchTracks(playlistId);
   }, []);
 
-  const fetchTracks = async () => {
+  const fetchTracks = async (playlistId) => {
     try {
-      const response = await fetch("/api/spotify/random");
+      const response = await fetch(
+        `/api/spotify/random?playlistId=${playlistId}`
+      );
       if (!response.ok) throw new Error("Failed to fetch tracks");
       const data = await response.json();
       if (!Array.isArray(data)) {
@@ -26,7 +31,6 @@ export default function Tournament() {
       }
 
       setAllTracks(data);
-      setRound(1);
       selectRandomTracks(data);
     } catch (err) {
       console.error("Error fetching tracks:", err);
@@ -34,7 +38,6 @@ export default function Tournament() {
   };
 
   const selectRandomTracks = (tracksList) => {
-    // Randomly select 16 tracks
     const shuffledTracks = tracksList.sort(() => 0.5 - Math.random());
     const selectedTracks = shuffledTracks.slice(0, 16);
     setTracks(selectedTracks);
