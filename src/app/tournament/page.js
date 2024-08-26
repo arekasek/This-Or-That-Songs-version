@@ -10,6 +10,7 @@ export default function Tournament() {
   const [currentPairIndex, setCurrentPairIndex] = useState(0);
   const [selectedTracks, setSelectedTracks] = useState([]);
   const [playingTrack, setPlayingTrack] = useState(null);
+  const [winner, setWinner] = useState(null);
   const router = useRouter();
   const audioRef = useRef(null);
 
@@ -83,7 +84,7 @@ export default function Tournament() {
     const nextRoundTracks = tracks.filter((track) => track.id !== loser.id);
 
     if (nextRoundTracks.length <= 1) {
-      alert(`Tournament Ended! Final winner: ${winner.name}`);
+      setWinner(winner);
       return;
     }
 
@@ -122,6 +123,11 @@ export default function Tournament() {
     }
   };
 
+  const handleRefresh = () => {
+    setWinner(null);
+    selectRandomTracks(allTracks);
+  };
+
   const currentPair = pairings[currentPairIndex];
 
   return (
@@ -129,8 +135,32 @@ export default function Tournament() {
       <h1 className="text-3xl font-bold mb-6 text-center">
         Music Tournament - {getRoundLabel()}
       </h1>
-      {currentPair ? (
-        <div className="flex flex-col md:flex-row justify-center mb-6">
+      {winner ? (
+        <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold mb-4">Final Winner!</h2>
+          <img
+            src={winner.album.images[0]?.url}
+            alt={winner.album.name}
+            className="w-48 h-48 object-cover rounded-md mb-4"
+          />
+          <p className="text-xl font-semibold mb-4">{winner.name}</p>
+          {winner.preview_url && (
+            <button
+              className={`px-4 py-2 bg-green-500 text-white rounded-md mr-2 ${
+                playingTrack === winner.preview_url ? "bg-red-500" : ""
+              }`}
+              onClick={() =>
+                playingTrack === winner.preview_url
+                  ? stopPreview()
+                  : playPreview(winner.preview_url)
+              }
+            >
+              {playingTrack === winner.preview_url ? "Stop" : "Play"} Preview
+            </button>
+          )}
+        </div>
+      ) : currentPair ? (
+        <div className="flex flex-col gap-8 md:flex-row justify-center mb-6">
           {currentPair.map((track) => (
             <div
               key={track.id}
@@ -173,7 +203,7 @@ export default function Tournament() {
       )}
       <audio ref={audioRef} />
       <button
-        onClick={() => selectRandomTracks(allTracks)}
+        onClick={handleRefresh}
         className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4"
       >
         Refresh Songs
