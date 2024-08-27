@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-
+import { Scrollbars } from "rc-scrollbars";
 export default function GenrePage({ params }) {
   const { genre } = params;
   const router = useRouter();
@@ -69,20 +69,20 @@ export default function GenrePage({ params }) {
       HipHop: [
         { id: "37i9dQZF1DZ06evO3CRVnO", label: "Playboi Carti" },
         { id: "37i9dQZF1DZ06evO0vGf4I", label: "Travis Scott" },
-        { id: "37i9dQZF1DZ06evO1XGbvi", label: "Kanye West" },
+        { id: "37i9dQZF1DZ06evO3nMr04", label: "Kanye West" },
         { id: "37i9dQZF1DX7QOv5kjbU68", label: "Drake" },
         { id: "37i9dQZF1DZ06evO4gTUOY", label: "Eminem" },
-        { id: "37i9dQZF1DZ06evO1IPOOk", label: "Jay-Z" },
-        { id: "37i9dQZF1DZ06evO1Za1Q4", label: "Kendrick Lamar" },
+        { id: "37i9dQZF1DZ06evO1XGbvi", label: "Jay-Z" },
+        { id: "37i9dQZF1DZ06evO1IPOOk", label: "Kendrick Lamar" },
         { id: "37i9dQZF1DZ06evO17QsVi", label: "2Pac" },
-        { id: "37i9dQZF1DZ06evO359MM7", label: "50 Cent" },
+        { id: "37i9dQZF1DZ06evO1Za1Q4", label: "50 Cent" },
         { id: "37i9dQZF1DZ06evO2crkgE", label: "Ice Cube" },
         { id: "37i9dQZF1DZ06evO3VkoW4", label: "Dr. Dre" },
         { id: "37i9dQZF1DZ06evO2ZpGiQ", label: "Lil Wayne" },
         { id: "37i9dQZF1DZ06evO2xmY3T", label: "Cardi B" },
-        { id: "37i9dQZF1DZ06evO0AnZXW", label: "Juice Wrld" },
-        { id: "37i9dQZF1DZ06evO1XGbvi", label: "XXXTENTACION" },
-        { id: "37i9dQZF1DZ06evO1aBeik", label: "Future" },
+        { id: "37i9dQZF1DZ06evO2O09Hg", label: "Juice Wrld" },
+        { id: "37i9dQZF1DZ06evO0AnZXW", label: "XXXTENTACION" },
+        { id: "37i9dQZF1DZ06evO133u6s", label: "Future" },
         { id: "37i9dQZF1DZ06evO3K21mU", label: "J Cole" },
         { id: "37i9dQZF1DZ06evO33svt5", label: "Doja Cat" },
         { id: "37i9dQZF1DZ06evO06Ki7m", label: "Metro Boomin" },
@@ -141,7 +141,7 @@ export default function GenrePage({ params }) {
   const playlists = getPlaylistsByGenre(genre);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 ">
+    <main className="flex min-h-screen flex-col items-center justify-center p-6">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div
@@ -152,31 +152,36 @@ export default function GenrePage({ params }) {
           </div>
         </div>
       ) : !categorySelected ? (
-        <>
-          <h1 className="text-3xl font-bold mb-6 text-center">
-            Select Playlist for {genre}
-          </h1>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-2 sm:gap-4">
-            {playlists.map(({ id, label }) => (
-              <div
-                key={id}
-                className="bg-slate-200 opacity-80 shadow-lg text-black rounded-md hover:bg-blue-600 mb-4 flex items-center flex-col cursor-pointer"
-                onClick={() => handleSelectCategory(id)}
-              >
-                <div className="w-full">
-                  <LazyLoadImage
-                    src={
-                      playlistImages[id] || "https://via.placeholder.com/300"
-                    }
-                    className="object-cover sm:w-[300px] sm:h-[300px] md:w-[200px] md:h-[200px] lg:w-[300px] lg:h-[300px] xl:w-[300px] xl:h-[300px] 2xl:w-[300px] 2xl:h-[300px] w-full h-full rounded-t-md"
-                    alt={label}
-                  />
-                </div>
-                <p className="text-center p-2">{label}</p>
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-[1fr,_minmax(0,_4fr)] w-full h-full">
+          <div className="bg-[#121212] p-12 rounded-3xl glass-effect-container h-1/4 hidden sm:block"></div>
+          <div className="bg-[#121212] sm:p-12 p-4 rounded-3xl glass-effect-container h-[calc(100vh-6rem)] overflow-y-auto songs-container">
+            <Scrollbars autoHide autoHideTimeout={1000} autoHideDuration={200}>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 gap-2 sm:gap-4">
+                {playlists.map(({ id, label }) => (
+                  <div
+                    key={id}
+                    className="bg-slate-200 opacity-80 shadow-lg text-black rounded-md hover:opacity-100 mb-4 flex items-center flex-col cursor-pointer"
+                    onClick={() => handleSelectCategory(id)}
+                  >
+                    <div className="w-full">
+                      <LazyLoadImage
+                        src={
+                          playlistImages[id] ||
+                          "https://via.placeholder.com/300"
+                        }
+                        className="object-cover w-full h-full rounded-t-md"
+                        alt={label}
+                      />
+                    </div>
+                    <p className="text-center p-2 sm:text-xl text-xs text-clip">
+                      {label}
+                    </p>
+                  </div>
+                ))}
               </div>
-            ))}
+            </Scrollbars>
           </div>
-        </>
+        </div>
       ) : (
         <p className="text-lg text-gray-600">Redirecting...</p>
       )}
