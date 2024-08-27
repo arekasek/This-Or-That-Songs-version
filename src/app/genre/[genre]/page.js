@@ -110,11 +110,11 @@ export default function GenrePage({ params }) {
         { id: "37i9dQZF1DZ06evO0yY0jC", label: "Gucci Mane" },
         { id: "37i9dQZF1DZ06evO0BEOzm", label: "Megan Thee Stallion" },
         { id: "37i9dQZF1DZ06evO1aBeik", label: "Post Malone" },
-        { id: "37i9dQZF1DX186v583rmzp", label: "90s Hip-Hop" },
-        { id: "37i9dQZF1DX58gKmCfKS2T", label: "Most RAP" },
-        { id: "37i9dQZF1DX2XmsXL2WBQd", label: "80s Hip-Hop" },
-        { id: "37i9dQZF1DX1lHW2vbQwNN", label: "00s Hip-Hop" },
-        { id: "37i9dQZF1DX97h7ftpNSYT", label: "2010s Hip-Hop" },
+        // { id: "37i9dQZF1DX186v583rmzp", label: "90s Hip-Hop" },
+        // { id: "37i9dQZF1DX58gKmCfKS2T", label: "Most RAP" },
+        // { id: "37i9dQZF1DX2XmsXL2WBQd", label: "80s Hip-Hop" },
+        // { id: "37i9dQZF1DX1lHW2vbQwNN", label: "00s Hip-Hop" },
+        // { id: "37i9dQZF1DX97h7ftpNSYT", label: "2010s Hip-Hop" },
       ],
       Polska: [
         { id: "37i9dQZF1DX49bSMRljsho", label: "Hot Hity" },
@@ -141,7 +141,7 @@ export default function GenrePage({ params }) {
   const playlists = getPlaylistsByGenre(genre);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
+    <main className="flex min-h-screen flex-col items-center justify-center p-6 ">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
           <div
@@ -160,7 +160,7 @@ export default function GenrePage({ params }) {
             {playlists.map(({ id, label }) => (
               <div
                 key={id}
-                className="bg-blue-500 text-white rounded-md hover:bg-blue-600 mb-4 flex items-center flex-col cursor-pointer"
+                className="bg-slate-200 opacity-80 shadow-lg text-black rounded-md hover:bg-blue-600 mb-4 flex items-center flex-col cursor-pointer"
                 onClick={() => handleSelectCategory(id)}
               >
                 <div className="w-full">
@@ -168,7 +168,7 @@ export default function GenrePage({ params }) {
                     src={
                       playlistImages[id] || "https://via.placeholder.com/300"
                     }
-                    className="object-cover sm:w-[200px] sm:h-[200px] w-full h-full rounded-t-md"
+                    className="object-cover sm:w-[300px] sm:h-[300px] md:w-[200px] md:h-[200px] lg:w-[300px] lg:h-[300px] xl:w-[300px] xl:h-[300px] 2xl:w-[300px] 2xl:h-[300px] w-full h-full rounded-t-md"
                     alt={label}
                   />
                 </div>
