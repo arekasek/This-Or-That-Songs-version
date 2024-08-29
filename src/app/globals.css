@@ -1,13 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+:root {
+  --vh: 100vh;
+}
 
 body {
   margin: 0;
   padding: 0;
   position: relative;
+  min-height: 100vh;
+  height: calc(var(--vh) - 1px);
 }
-
 body::before {
   content: "";
   position: fixed;
