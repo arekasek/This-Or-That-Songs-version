@@ -114,7 +114,7 @@ export default function Tournament() {
   const currentPair = pairings[currentPairIndex];
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-6 bg-gray-100">
+    <main className="flex min-h-screen flex-col items-center justify-center p-1 sm:p-6 bg-gray-100">
       <h1 className="text-3xl font-bold mb-6 text-center">
         Music Tournament - {getRoundLabel()}
       </h1>
@@ -132,11 +132,11 @@ export default function Tournament() {
           </div>
         </div>
       ) : currentPair ? (
-        <div className="flex flex-col gap-8 md:flex-row justify-center mb-6">
+        <div className="flex flex-col gap-8 md:flex-row items-center justify-center mb-6">
           {currentPair.map((track) => (
             <div
               key={track.id}
-              className="flex-col flex mx-2 p-4 bg-white shadow-md rounded-lg"
+              className="flex-col flex mx-2 p-4 bg-white w-[100%]  xl:w-[30vw]  shadow-md rounded-lg"
             >
               <div>
                 <SpotifyPlayer trackId={track.id} />

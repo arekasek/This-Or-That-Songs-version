@@ -6,13 +6,11 @@ const SpotifyPlayer = ({ trackId }) => {
   return (
     <div className="w-full">
       <iframe
-        className="w-full"
-        title="Spotify Player"
-        style={{ height: "375px", margin: "0", padding: "0" }}
-        allowFullScreen="true"
         src={`https://open.spotify.com/embed/track/${trackId}?utm_source=generator`}
         width="100%"
+        height="375"
         frameBorder="0"
+        allowfullscreen=""
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
       ></iframe>

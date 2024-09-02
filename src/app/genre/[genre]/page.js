@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Scrollbars } from "rc-scrollbars";
+import { getPlaylistsByGenre } from "../../components/genrePlaylists";
+
 export default function GenrePage({ params }) {
   const { genre } = params;
   const router = useRouter();
@@ -58,86 +60,6 @@ export default function GenrePage({ params }) {
     }
   };
 
-  const getPlaylistsByGenre = (genre) => {
-    const genrePlaylists = {
-      0: [{ id: "37i9dQZF1DX5KpP2LN299J", label: "Taylor Swift" }],
-      1: [{ id: "37i9dQZF1DZ06evO4bwDxS", label: "Top Hits" }],
-      Rock: [
-        { id: "37i9dQZF1DWXRqgorJj26U", label: "Rock Classics" },
-        { id: "37i9dQZF1DXcF6B6QPhFDv", label: "Alternative 90s" },
-      ],
-      2: [
-        { id: "37i9dQZF1DZ06evO3CRVnO", label: "Playboi Carti" },
-        { id: "37i9dQZF1DZ06evO0vGf4I", label: "Travis Scott" },
-        { id: "37i9dQZF1DZ06evO3nMr04", label: "Kanye West" },
-        { id: "37i9dQZF1DX7QOv5kjbU68", label: "Drake" },
-        { id: "37i9dQZF1DZ06evO4gTUOY", label: "Eminem" },
-        { id: "37i9dQZF1DZ06evO1XGbvi", label: "Jay-Z" },
-        { id: "37i9dQZF1DZ06evO1IPOOk", label: "Kendrick Lamar" },
-        { id: "37i9dQZF1DZ06evO17QsVi", label: "2Pac" },
-        { id: "37i9dQZF1DZ06evO1Za1Q4", label: "50 Cent" },
-        { id: "37i9dQZF1DZ06evO2crkgE", label: "Ice Cube" },
-        { id: "37i9dQZF1DZ06evO3VkoW4", label: "Dr. Dre" },
-        { id: "37i9dQZF1DZ06evO2ZpGiQ", label: "Lil Wayne" },
-        { id: "37i9dQZF1DZ06evO2xmY3T", label: "Cardi B" },
-        { id: "37i9dQZF1DZ06evO2O09Hg", label: "Juice Wrld" },
-        { id: "37i9dQZF1DZ06evO0AnZXW", label: "XXXTENTACION" },
-        { id: "37i9dQZF1DZ06evO133u6s", label: "Future" },
-        { id: "37i9dQZF1DZ06evO3K21mU", label: "J Cole" },
-        { id: "37i9dQZF1DZ06evO33svt5", label: "Doja Cat" },
-        { id: "37i9dQZF1DZ06evO06Ki7m", label: "Metro Boomin" },
-        { id: "37i9dQZF1DZ06evO152G0U", label: "21 Savage" },
-        { id: "37i9dQZF1DZ06evO359MM7", label: "Lil Baby" },
-        { id: "37i9dQZF1DZ06evO2NufN6", label: "Mac Miller" },
-        { id: "37i9dQZF1DZ06evO04kFZs", label: "Pop Smoke" },
-        { id: "37i9dQZF1DZ06evO2T8209", label: "Tyler, The Creator" },
-        { id: "37i9dQZF1DZ06evO1kxsTC", label: "Lil Peep" },
-        { id: "37i9dQZF1DZ06evO15CHq8", label: "SuicideboyS" },
-        { id: "37i9dQZF1DZ06evO2B3mUC", label: "DaBaby" },
-        { id: "37i9dQZF1DZ06evO0yI3tK", label: "Wiz Khalifa" },
-        { id: "37i9dQZF1DZ06evO3oLcOc", label: "Tyga" },
-        { id: "37i9dQZF1DZ06evO471fR6", label: "Trippie Redd" },
-        { id: "37i9dQZF1DZ06evO0yVwSk", label: "A$AP Rocky" },
-        { id: "37i9dQZF1DZ06evO1iznkj", label: "Gunna" },
-        { id: "37i9dQZF1DZ06evO2oTcyc", label: "Kodak Black" },
-        { id: "37i9dQZF1DZ06evO3TbKzu", label: "Polo G" },
-        { id: "37i9dQZF1DZ06evO04TCIU", label: "Kid Cudi" },
-        { id: "37i9dQZF1DZ06evO07bvXy", label: "Flo Rida" },
-        { id: "37i9dQZF1DZ06evO4aKvZe", label: "Childish Gambino" },
-        { id: "37i9dQZF1DZ06evO2ZTWSp", label: "Lizzo" },
-        { id: "37i9dQZF1DZ06evO39qAJG", label: "The Notorious BIG" },
-        { id: "37i9dQZF1DZ06evO02KO6k", label: "Big Sean" },
-        { id: "37i9dQZF1DZ06evO0yY0jC", label: "Gucci Mane" },
-        { id: "37i9dQZF1DZ06evO0BEOzm", label: "Megan Thee Stallion" },
-        { id: "37i9dQZF1DZ06evO1aBeik", label: "Post Malone" },
-        // { id: "37i9dQZF1DX186v583rmzp", label: "90s Hip-Hop" },
-        // { id: "37i9dQZF1DX58gKmCfKS2T", label: "Most RAP" },
-        // { id: "37i9dQZF1DX2XmsXL2WBQd", label: "80s Hip-Hop" },
-        // { id: "37i9dQZF1DX1lHW2vbQwNN", label: "00s Hip-Hop" },
-        // { id: "37i9dQZF1DX97h7ftpNSYT", label: "2010s Hip-Hop" },
-      ],
-      3: [
-        { id: "37i9dQZF1DX49bSMRljsho", label: "Hot Hity" },
-        { id: "37i9dQZF1DX8J2l55TrZk6", label: "Hity wszechczasów" },
-        { id: "37i9dQZF1DWWC8p2yKdFrw", label: "Polska 80s" },
-        { id: "37i9dQZF1DX1leCUq7he50", label: "Polska 90s" },
-        { id: "37i9dQZF1DX5qXEz970M38", label: "Polska 00s" },
-        { id: "37i9dQZF1DX7bSIS915wSM", label: "Polska 2010s" },
-        { id: "37i9dQZF1DX7P3ukP665LS", label: "Imprezowe Hity" },
-        { id: "37i9dQZF1DWXz9uZQKizRS", label: "Alternatywne Hity" },
-        { id: "1leWKIMy3rLDi36t8iIjmK", label: "HITY NA MAXXXA" },
-        { id: "6gqxyeKeBBelKMQbgVOVHa", label: "PRZEBOJE ZETKA" },
-        { id: "37i9dQZF1DWU3YMWyCwNtr", label: "Nowości DISCO POLO" },
-        { id: "37i9dQZF1DX6gb9mP6Vy34", label: "Hity Disco Polo" },
-        { id: "37i9dQZF1DXahkpBcruHaS", label: "LEGENDY DISCO POLO" },
-        { id: "37i9dQZF1DWSWubjQuAKF1", label: "GEN-Z POLSKA" },
-      ],
-    };
-
-    const playlists = genrePlaylists[genre] || [];
-    return playlists.sort((a, b) => a.label.localeCompare(b.label));
-  };
-
   const playlists = getPlaylistsByGenre(genre);
 
   return (
@@ -160,7 +82,7 @@ export default function GenrePage({ params }) {
                 {playlists.map(({ id, label }) => (
                   <div
                     key={id}
-                    className="bg-slate-200 opacity-80 shadow-lg text-black rounded-md hover:opacity-100 mb-4 flex items-center flex-col cursor-pointer"
+                    className="glass-effect-container-md opacity-80 shadow-lg text-black rounded-md hover:opacity-100 p-2 mb-4 flex items-center flex-col cursor-pointer"
                     onClick={() => handleSelectCategory(id)}
                   >
                     <div className="w-full">
@@ -173,9 +95,6 @@ export default function GenrePage({ params }) {
                         alt={label}
                       />
                     </div>
-                    <p className="text-center p-2 sm:text-xl text-xs text-clip">
-                      {label}
-                    </p>
                   </div>
                 ))}
               </div>

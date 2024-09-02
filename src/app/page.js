@@ -8,6 +8,10 @@ export default function Home() {
     router.push(`/genre/${genre}`);
   };
 
+  const handleSpotifyLogin = () => {
+    router.push("/api/spotify/auth");
+  };
+
   const Categories = ["Pop", "Trends", "HipHop", "Poland"];
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 text-white">
@@ -17,13 +21,19 @@ export default function Home() {
         {Categories.map((category, genre) => (
           <button
             key={category}
-            className="p-12  text-white rounded-md cursor-pointer glass-effect-container flex items-center justify-center genre-button"
+            className="p-12 text-white rounded-md cursor-pointer glass-effect-container flex items-center justify-center genre-button"
             onClick={() => handleSelectGenre(genre)}
           >
             {category}
           </button>
         ))}
       </div>
+      <button
+        onClick={handleSpotifyLogin}
+        className="mt-6 p-3 bg-green-500 text-white rounded-md"
+      >
+        Login with Spotify
+      </button>
     </main>
   );
 }
