@@ -12,7 +12,14 @@ export default function Home() {
     router.push("/api/spotify/auth");
   };
 
-  const Categories = ["Pop", "Trends", "HipHop", "Poland"];
+  const Categories = [
+    "Pop",
+    "Trends",
+    "HipHop",
+    "Poland",
+    "Top of All Time",
+    "2000s Hits",
+  ];
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-6 text-white">
       <img src="/This-or-That.png" className="w-[500px]" />

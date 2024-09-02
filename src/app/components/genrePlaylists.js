@@ -1,6 +1,7 @@
 const genrePlaylists = {
   0: [
     //POP
+    { id: "7AsZxdanrHJFNGp3q7tp1f", label: "..Best of POP all time" },
     { id: "37i9dQZF1DX2vTOtsQ5Isl", label: ".Top Pop 2024" },
     { id: "37i9dQZF1DWWvvyNmW9V9a", label: ".Teen Pop" },
     { id: "37i9dQZF1DWUa8ZRTfalHk", label: "Rising Pop" },
@@ -28,7 +29,6 @@ const genrePlaylists = {
     { id: "37i9dQZF1DWXJyjYpHunCf", label: "Folk Pop" },
     { id: "37i9dQZF1DWUPafHP1BJw1", label: "Classic Pop" },
     { id: "37i9dQZF1DWWCk4v3ohhHQ", label: "Pop Rock 10s" },
-    { id: "37i9dQZF1EIdt7tQbR8QDN", label: "Dance Pop mix" },
     { id: "37i9dQZF1DX6ThddIjWuGT", label: "Latino pop" },
     { id: "37i9dQZF1DX5gQonLbZD9s", label: "Pumped Pop" },
     { id: "37i9dQZF1DWSThc8QnzIme", label: "Drive Pop" },
@@ -86,6 +86,8 @@ const genrePlaylists = {
     { id: "37i9dQZF1DZ06evO0yY0jC", label: "Gucci Mane" },
     { id: "37i9dQZF1DZ06evO0BEOzm", label: "Megan Thee Stallion" },
     { id: "37i9dQZF1DZ06evO1aBeik", label: "Post Malone" },
+    { id: "37i9dQZF1DXb8wplbC2YhV", label: "Best Hip-Hop of all time" },
+    { id: "37i9dQZF1DX58gKmCfKS2T", label: "Most streamed rap" },
     // { id: "37i9dQZF1DX186v583rmzp", label: "90s Hip-Hop" },
     // { id: "37i9dQZF1DX58gKmCfKS2T", label: "Most RAP" },
     // { id: "37i9dQZF1DX2XmsXL2WBQd", label: "80s Hip-Hop" },
@@ -107,6 +109,33 @@ const genrePlaylists = {
     { id: "37i9dQZF1DX6gb9mP6Vy34", label: "Hity Disco Polo" },
     { id: "37i9dQZF1DXahkpBcruHaS", label: "LEGENDY DISCO POLO" },
     { id: "37i9dQZF1DWSWubjQuAKF1", label: "GEN-Z POLSKA" },
+  ],
+  4: [
+    { id: "37i9dQZF1DX7iB3RCnBnN4", label: ".Billion Club" },
+    { id: "37i9dQZF1DWSV3Tk4GO2fq", label: "50s Playlist" },
+    { id: "37i9dQZF1DXaKIA8E7WcJj", label: "60s Playlist" },
+    { id: "37i9dQZF1DWTJ7xPn4vNaz", label: "70s Playlist" },
+    { id: "37i9dQZF1DX4UtSsGT1Sbe", label: "80s Playlist" },
+    { id: "37i9dQZF1DXbTxeAdrVG2l", label: "90s Playlist" },
+    { id: "37i9dQZF1DX4o1oenSJRJd", label: "l2000s Playlist" },
+    { id: "37i9dQZF1DX5Ejj0EkURtP", label: "2010s Playlist" },
+    { id: "37i9dQZF1DX2M1RktxUUHG", label: "2020 Playlist" },
+  ],
+  5: [
+    { id: "37i9dQZF1DX7e8TjkFNKWH", label: "2000 Party Playlist" },
+    { id: "37i9dQZF1DWSj4n2q6ZYVe", label: "2000 Dance Playlist" },
+    { id: "37i9dQZF1EIdh6MgVIhb8B", label: ".top 2000 Playlist" },
+    { id: "37i9dQZF1DWTUoU0bd0p84", label: "2000 Summer Hits" },
+    { id: "37i9dQZF1DXdGHPXiRsW3u", label: "2000 Soft Hits" },
+    { id: "37i9dQZF1DWZmtrk33btOM", label: "top 2001 Playlist" },
+    { id: "37i9dQZF1DX6pidNhUl3IN", label: "top 2002 Playlist" },
+    { id: "37i9dQZF1DXbdY3N3Ucej4", label: "top 2003 Playlist" },
+    { id: "37i9dQZF1DWVCpK5SVqe66", label: "top 2004 Playlist" },
+    { id: "37i9dQZF1DXarC0Cy7VsAl", label: "top 2005 Playlist" },
+    { id: "37i9dQZF1DX5c42vvWQbfU", label: "top 2006 Playlist" },
+    { id: "37i9dQZF1DXczJmqUuGWmO", label: "top 2007 Playlist" },
+    { id: "37i9dQZF1DX5uCG9BwFjow", label: "top 2008 Playlist" },
+    { id: "37i9dQZF1DXaCUs0UpSRYo", label: "top 2009 Playlist" },
   ],
 };
 export function getPlaylistsByGenre(genre) {
