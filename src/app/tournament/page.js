@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import SpotifyPlayer from "../api/spotify/SpotifyPlayer"; // Import komponentu SpotifyPlayer
 
 export default function Tournament() {
   const [allTracks, setAllTracks] = useState([]);
@@ -9,10 +10,8 @@ export default function Tournament() {
   const [pairings, setPairings] = useState([]);
   const [currentPairIndex, setCurrentPairIndex] = useState(0);
   const [selectedTracks, setSelectedTracks] = useState([]);
-  const [playingTrack, setPlayingTrack] = useState(null);
   const [winner, setWinner] = useState(null);
   const router = useRouter();
-  const audioRef = useRef(null);
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
@@ -74,8 +73,6 @@ export default function Tournament() {
   };
 
   const handleSelection = (winner) => {
-    stopPreview();
-
     const updatedSelectedTracks = [...selectedTracks, winner];
     const loser = pairings[currentPairIndex].find(
       (track) => track.id !== winner.id
@@ -107,24 +104,10 @@ export default function Tournament() {
     setSelectedTracks(updatedSelectedTracks);
   };
 
-  const playPreview = (previewUrl) => {
-    if (audioRef.current) {
-      audioRef.current.src = previewUrl;
-      audioRef.current.play();
-      setPlayingTrack(previewUrl);
-    }
-  };
-
-  const stopPreview = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.src = "";
-      setPlayingTrack(null);
-    }
-  };
-
   const handleRefresh = () => {
     setWinner(null);
+    setRound(1);
+    setSelectedTracks([]);
     selectRandomTracks(allTracks);
   };
 
@@ -144,64 +127,32 @@ export default function Tournament() {
             className="w-48 h-48 object-cover rounded-md mb-4"
           />
           <p className="text-xl font-semibold mb-4">{winner.name}</p>
-          {winner.preview_url && (
-            <button
-              className={`px-4 py-2 bg-green-500 text-white rounded-md mr-2 ${
-                playingTrack === winner.preview_url ? "bg-red-500" : ""
-              }`}
-              onClick={() =>
-                playingTrack === winner.preview_url
-                  ? stopPreview()
-                  : playPreview(winner.preview_url)
-              }
-            >
-              {playingTrack === winner.preview_url ? "Stop" : "Play"} Preview
-            </button>
-          )}
+          <div>
+            <SpotifyPlayer trackId={winner.id} />
+          </div>
         </div>
       ) : currentPair ? (
         <div className="flex flex-col gap-8 md:flex-row justify-center mb-6">
           {currentPair.map((track) => (
             <div
               key={track.id}
-              className="flex-1 mx-2 p-4 bg-white shadow-md rounded-lg"
+              className="flex-col flex mx-2 p-4 bg-white shadow-md rounded-lg"
             >
-              <img
-                src={track.album.images[0]?.url}
-                alt={track.album.name}
-                className="w-full h-48 object-cover rounded-md mb-2"
-              />
-              <p className="text-xl font-semibold mb-2">{track.name}</p>
+              <div>
+                <SpotifyPlayer trackId={track.id} />
+              </div>
               <button
                 className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
                 onClick={() => handleSelection(track)}
               >
                 Select
               </button>
-              {track.preview_url && (
-                <div className="mt-2">
-                  <button
-                    className={`px-4 py-2 bg-green-500 text-white rounded-md mr-2 ${
-                      playingTrack === track.preview_url ? "bg-red-500" : ""
-                    }`}
-                    onClick={() =>
-                      playingTrack === track.preview_url
-                        ? stopPreview()
-                        : playPreview(track.preview_url)
-                    }
-                  >
-                    {playingTrack === track.preview_url ? "Stop" : "Play"}{" "}
-                    Preview
-                  </button>
-                </div>
-              )}
             </div>
           ))}
         </div>
       ) : (
         <p className="text-lg text-gray-600">No more tracks to display</p>
       )}
-      <audio ref={audioRef} />
       <button
         onClick={handleRefresh}
         className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4"

@@ -60,13 +60,13 @@ export default function GenrePage({ params }) {
 
   const getPlaylistsByGenre = (genre) => {
     const genrePlaylists = {
-      Pop: [{ id: "37i9dQZF1DX5KpP2LN299J", label: "Taylor Swift" }],
-      Trends: [{ id: "37i9dQZF1DZ06evO4bwDxS", label: "Top Hits" }],
+      0: [{ id: "37i9dQZF1DX5KpP2LN299J", label: "Taylor Swift" }],
+      1: [{ id: "37i9dQZF1DZ06evO4bwDxS", label: "Top Hits" }],
       Rock: [
         { id: "37i9dQZF1DWXRqgorJj26U", label: "Rock Classics" },
         { id: "37i9dQZF1DXcF6B6QPhFDv", label: "Alternative 90s" },
       ],
-      HipHop: [
+      2: [
         { id: "37i9dQZF1DZ06evO3CRVnO", label: "Playboi Carti" },
         { id: "37i9dQZF1DZ06evO0vGf4I", label: "Travis Scott" },
         { id: "37i9dQZF1DZ06evO3nMr04", label: "Kanye West" },
@@ -116,7 +116,7 @@ export default function GenrePage({ params }) {
         // { id: "37i9dQZF1DX1lHW2vbQwNN", label: "00s Hip-Hop" },
         // { id: "37i9dQZF1DX97h7ftpNSYT", label: "2010s Hip-Hop" },
       ],
-      Polska: [
+      3: [
         { id: "37i9dQZF1DX49bSMRljsho", label: "Hot Hity" },
         { id: "37i9dQZF1DX8J2l55TrZk6", label: "Hity wszechczasów" },
         { id: "37i9dQZF1DWWC8p2yKdFrw", label: "Polska 80s" },
