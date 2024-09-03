@@ -18,7 +18,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("/background-image.png") no-repeat center center fixed;
+  background: url("/bg.png") no-repeat center center fixed;
   background-size: cover;
   z-index: -1;
 }
@@ -38,4 +38,63 @@ body::before {
 .genre-button {
   position: relative;
   top: 2px;
+}
+.zigzag-container {
+  background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%
+      ) -100px 0,
+    linear-gradient(225deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%) -100px
+      0,
+    linear-gradient(315deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%);
+  background-size: 200px 200px;
+  background-color: rgba(255, 0, 0, 0);
+}
+.checks-container {
+  background: repeating-conic-gradient(
+    from 45deg,
+    rgba(255, 255, 255, 0.05) 0% 25%,
+    rgba(199, 119, 170, 0) 0% 50%
+  );
+  background-size: 100px 100px;
+  background-color: rgba(199, 119, 170, 0);
+}
+.hlines-container {
+  background-image: linear-gradient(
+    0deg,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 50%
+  );
+  background-size: 100px 100px;
+  background-color: rgba(199, 119, 170, 0);
+}
+.vlines-container {
+  background-image: linear-gradient(
+    90deg,
+    transparent 50%,
+    rgba(255, 255, 255, 0.05) 50%
+  );
+  background-size: 100px 100px;
+  background-color: rgba(199, 119, 170, 0);
+}
+.checks2-container {
+  background-image: repeating-conic-gradient(
+    rgba(255, 255, 255, 0.05) 0% 25%,
+    rgba(199, 119, 170, 0) 0% 50%
+  );
+  background-position: 0 0, 77px 77px;
+  background-size: 154px 154px;
+  background-color: rgba(199, 119, 170, 0);
+}
+.dots-container {
+  background-image: radial-gradient(
+      rgba(255, 255, 255, 0.05) 5px,
+      transparent 5px
+    ),
+    radial-gradient(rgba(255, 255, 255, 0.05) 5px, transparent 5px);
+  background-size: 100px 100px;
+  background-position: 0 0, 50px 50px;
+  background-color: rgba(199, 119, 170, 0);
 }

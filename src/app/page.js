@@ -14,7 +14,7 @@ export default function Home() {
 
   const Categories = [
     "Pop",
-    "Trends",
+    "Daily Song Charts",
     "HipHop",
     "Poland",
     "Top of All Time",

@@ -1,7 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import SpotifyPlayer from "../api/spotify/SpotifyPlayer"; // Import komponentu SpotifyPlayer
+import SpotifyPlayer from "../api/spotify/SpotifyPlayer";
+import ColorThief from "colorthief";
 
 export default function Tournament() {
   const [allTracks, setAllTracks] = useState([]);
@@ -11,7 +12,16 @@ export default function Tournament() {
   const [currentPairIndex, setCurrentPairIndex] = useState(0);
   const [selectedTracks, setSelectedTracks] = useState([]);
   const [winner, setWinner] = useState(null);
+  const [dominantColors, setDominantColors] = useState({});
   const router = useRouter();
+
+  const containerClasses = [
+    "checks-container",
+    "dots-container",
+    "hlines-container",
+    "vlines-container",
+    "checks2-container",
+  ];
 
   useEffect(() => {
     const query = new URLSearchParams(window.location.search);
@@ -32,9 +42,28 @@ export default function Tournament() {
 
       setAllTracks(data);
       selectRandomTracks(data);
+      fetchDominantColors(data);
     } catch (err) {
       console.error("Error fetching tracks:", err);
     }
+  };
+
+  const fetchDominantColors = (tracks) => {
+    const colorThief = new ColorThief();
+
+    tracks.forEach((track) => {
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.src = track.album.images[0]?.url;
+
+      img.onload = () => {
+        const color = colorThief.getColor(img);
+        setDominantColors((prevColors) => ({
+          ...prevColors,
+          [track.id]: `rgb(${color.join(",")})`,
+        }));
+      };
+    });
   };
 
   const selectRandomTracks = (tracksList) => {
@@ -111,15 +140,21 @@ export default function Tournament() {
     selectRandomTracks(allTracks);
   };
 
+  const getRandomClass = () => {
+    return containerClasses[
+      Math.floor(Math.random() * containerClasses.length)
+    ];
+  };
+
   const currentPair = pairings[currentPairIndex];
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-1 sm:p-6 bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6 text-center">
+    <main className="flex min-h-screen flex-col sm:flex-row items-center justify-center bg-gray-100">
+      <h1 className="text-3xl font-bold mb-6 text-center sm:fixed sm:top-24 z-10 bg-white w-fit p-4 border-[10px] border-black">
         Music Tournament - {getRoundLabel()}
       </h1>
       {winner ? (
-        <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md">
+        <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md z-10">
           <h2 className="text-2xl font-semibold mb-4">Final Winner!</h2>
           <img
             src={winner.album.images[0]?.url}
@@ -132,21 +167,26 @@ export default function Tournament() {
           </div>
         </div>
       ) : currentPair ? (
-        <div className="flex flex-col gap-8 md:flex-row items-center justify-center mb-6">
+        <div className="w-full h-full flex flex-col sm:flex-row">
           {currentPair.map((track) => (
             <div
               key={track.id}
-              className="flex-col flex mx-2 p-4 bg-white w-[100%]  xl:w-[30vw]  shadow-md rounded-lg"
+              className={`sm:w-[50%] w-[100%] flex justify-center h-[30%] sm:h-screen items-center p-2 sm:p-6 special-container z-0 ${getRandomClass()}`}
+              style={{
+                backgroundColor: dominantColors[track.id] || "white",
+              }}
             >
-              <div>
-                <SpotifyPlayer trackId={track.id} />
+              <div className="flex-col flex mx-2 p-4 bg-white shadow-md rounded-lg xl:w-3/5 sm:w-full h-fit glass-effect-container-md ">
+                <div>
+                  <SpotifyPlayer trackId={track.id} />
+                </div>
+                <button
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                  onClick={() => handleSelection(track)}
+                >
+                  Select
+                </button>
               </div>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-                onClick={() => handleSelection(track)}
-              >
-                Select
-              </button>
             </div>
           ))}
         </div>
@@ -155,10 +195,14 @@ export default function Tournament() {
       )}
       <button
         onClick={handleRefresh}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4"
+        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4 sm:fixed sm:bottom-24 w-full sm:w-auto z-10"
       >
         Refresh Songs
       </button>
+      <div className="absolute bg-white h-screen w-12 z-0 border-x-[10px] border-black"></div>
+      <div className="absolute">
+        <img src="/vs1.png" className="w-[250px] z-10" />
+      </div>
     </main>
   );
 }

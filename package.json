@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.7.5",
+    "colorthief": "^2.4.0",
     "dotenv": "^16.4.5",
     "music-app": "file:",
     "next": "14.2.6",
