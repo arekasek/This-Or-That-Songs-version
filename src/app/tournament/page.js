@@ -150,7 +150,7 @@ export default function Tournament() {
 
   return (
     <main className="flex min-h-screen flex-col sm:flex-row items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6 text-center sm:fixed sm:top-24 z-10 bg-white w-fit p-4 border-[10px] border-black">
+      <h1 className="text-3xl font-bold mb-6 text-center sm:fixed sm:top-24 z-10 bg-white w-fit hidden sm:block p-4 border-[10px] border-black">
         Music Tournament - {getRoundLabel()}
       </h1>
       {winner ? (
@@ -195,13 +195,13 @@ export default function Tournament() {
       )}
       <button
         onClick={handleRefresh}
-        className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-4 sm:fixed sm:bottom-24 w-full sm:w-auto z-10"
+        className="px-4 py-2 bg-blue-500 sm:block text-white rounded-md hover:bg-blue-600 mt-4 hidden sm:fixed sm:bottom-24 w-full sm:w-auto z-10"
       >
         Refresh Songs
       </button>
-      <div className="absolute bg-white h-screen w-12 z-0 border-x-[10px] border-black"></div>
+      <div className="absolute hidden bg-white sm:block sm:h-screen sm:w-12 z-0 border-x-[10px] border-black"></div>
       <div className="absolute">
-        <img src="/vs1.png" className="w-[250px] z-10" />
+        <img src="/vs1.png" className="xl:w-[250px] w-[100px] z-10" />
       </div>
     </main>
   );
