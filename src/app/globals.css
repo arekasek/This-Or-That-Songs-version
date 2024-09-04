@@ -98,3 +98,12 @@ body::before {
   background-position: 0 0, 50px 50px;
   background-color: rgba(199, 119, 170, 0);
 }
+@font-face {
+  font-family: "Nexa";
+  src: url("/fonts/NexaScriptDemo-Bold.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+.nexa {
+  font-family: Nexa;
+}

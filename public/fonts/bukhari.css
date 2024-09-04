@@ -1,0 +1,9 @@
+@font-face {
+  font-family: "Bukhari";
+  src: url("./BukhariScript-Regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+.bukhari {
+  font-family: Bukhari;
+}

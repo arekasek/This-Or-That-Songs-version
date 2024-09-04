@@ -13,6 +13,7 @@ export default function Tournament() {
   const [selectedTracks, setSelectedTracks] = useState([]);
   const [winner, setWinner] = useState(null);
   const [dominantColors, setDominantColors] = useState({});
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   const containerClasses = [
@@ -43,8 +44,10 @@ export default function Tournament() {
       setAllTracks(data);
       selectRandomTracks(data);
       fetchDominantColors(data);
+      setLoading(false);
     } catch (err) {
       console.error("Error fetching tracks:", err);
+      setLoading(false);
     }
   };
 
@@ -149,11 +152,13 @@ export default function Tournament() {
   const currentPair = pairings[currentPairIndex];
 
   return (
-    <main className="flex min-h-screen flex-col sm:flex-row items-center justify-center bg-gray-100">
-      <h1 className="text-3xl font-bold mb-6 text-center sm:fixed sm:top-24 z-10 bg-white w-fit hidden sm:block p-4 border-[10px] border-black">
-        Music Tournament - {getRoundLabel()}
-      </h1>
-      {winner ? (
+    <main className="flex min-h-screen flex-col sm:flex-row items-center justify-center bg-gray-100 relative">
+      {loading && (
+        <div className="flex items-center justify-center absolute inset-0 z-50 bg-white">
+          <img src="/loading-gif.gif" className="w-[400px]" />
+        </div>
+      )}
+      {!loading && winner ? (
         <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md z-10">
           <h2 className="text-2xl font-semibold mb-4">Final Winner!</h2>
           <img
@@ -166,7 +171,7 @@ export default function Tournament() {
             <SpotifyPlayer trackId={winner.id} />
           </div>
         </div>
-      ) : currentPair ? (
+      ) : !loading && currentPair ? (
         <div className="w-full h-full flex flex-col sm:flex-row">
           {currentPair.map((track) => (
             <div
@@ -176,7 +181,7 @@ export default function Tournament() {
                 backgroundColor: dominantColors[track.id] || "white",
               }}
             >
-              <div className="flex-col flex mx-2 p-4 bg-white shadow-md rounded-lg xl:w-3/5 sm:w-full h-fit glass-effect-container-md ">
+              <div className="flex-col flex p-4 bg-white shadow-md rounded-lg xl:w-3/5 w-full sm:w-full h-fit glass-effect-container-md sm:mx-2 2xl:mx-0 my-8 hover:transform hover:scale-105 transition duration-500">
                 <div>
                   <SpotifyPlayer trackId={track.id} />
                 </div>
@@ -191,7 +196,9 @@ export default function Tournament() {
           ))}
         </div>
       ) : (
-        <p className="text-lg text-gray-600">No more tracks to display</p>
+        !loading && (
+          <p className="text-lg text-gray-600">No more tracks to display</p>
+        )
       )}
       <button
         onClick={handleRefresh}
@@ -203,6 +210,9 @@ export default function Tournament() {
       <div className="absolute">
         <img src="/vs1.png" className="xl:w-[250px] w-[100px] z-10" />
       </div>
+      <h1 className="absolute hidden sm:block  sm:fixed sm:top-24 z-10 text-white text-6xl font-extrabold">
+        {getRoundLabel()}
+      </h1>
     </main>
   );
 }

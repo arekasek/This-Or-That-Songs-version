@@ -66,11 +66,8 @@ export default function GenrePage({ params }) {
     <main className="flex min-h-screen flex-col items-center justify-center p-6">
       {loading ? (
         <div className="flex items-center justify-center w-full h-full">
-          <div
-            className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500"
-            role="status"
-          >
-            <span className="sr-only">Loading...</span>
+          <div className="flex items-center justify-center">
+            <img src="/loading-gif.gif" className="w-[400px] absolute" />
           </div>
         </div>
       ) : !categorySelected ? (
