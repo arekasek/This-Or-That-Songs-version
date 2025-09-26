@@ -3,7 +3,7 @@ import querystring from "querystring";
 export async function GET(req) {
   const client_id = process.env.SPOTIFY_CLIENT_ID;
   const redirect_uri =
-    "https://this-or-that-songs-version-git-main-arekaseks-projects.vercel.app/genre";
+    "https://this-or-that-songs-version-git-main-arekaseks-projects.vercel.app/callback";
   const scope = "user-library-read user-read-private user-read-email";
 
   const url =
