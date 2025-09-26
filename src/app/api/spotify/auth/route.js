@@ -2,7 +2,8 @@ import querystring from "querystring";
 
 export async function GET(req) {
   const client_id = process.env.SPOTIFY_CLIENT_ID;
-  const redirect_uri = "http://localhost:3000/genre";
+  const redirect_uri =
+    "https://this-or-that-songs-version-git-main-arekaseks-projects.vercel.app/genre";
   const scope = "user-library-read user-read-private user-read-email";
 
   const url =
