@@ -13,6 +13,7 @@ const SpotifyPlayer = ({ trackId }) => {
         allowfullscreen=""
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
         loading="lazy"
+        className="opacity-50 rounded-lg transition duration-300"
       ></iframe>
     </div>
   );

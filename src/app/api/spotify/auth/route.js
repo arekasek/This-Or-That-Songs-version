@@ -1,19 +1,21 @@
-import { NextResponse } from "next/server";
 import querystring from "querystring";
 
-export async function GET() {
-  const clientId = process.env.SPOTIFY_CLIENT_ID;
-  const redirectUri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI;
-  const scope = "user-read-private user-read-email";
+export async function GET(req) {
+  const client_id = process.env.SPOTIFY_CLIENT_ID;
+  const redirect_uri = "http://localhost:3000/genre";
+  const scope = "user-library-read user-read-private user-read-email";
 
-  const queryParams = querystring.stringify({
-    response_type: "code",
-    client_id: clientId,
-    scope: scope,
-    redirect_uri: redirectUri,
+  const url =
+    "https://accounts.spotify.com/authorize?" +
+    querystring.stringify({
+      response_type: "token",
+      client_id,
+      scope,
+      redirect_uri,
+    });
+
+  return new Response(null, {
+    status: 302,
+    headers: { Location: url },
   });
-
-  const spotifyAuthUrl = `https://accounts.spotify.com/authorize?${queryParams}`;
-
-  return NextResponse.redirect(spotifyAuthUrl);
 }

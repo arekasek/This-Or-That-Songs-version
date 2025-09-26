@@ -3,6 +3,16 @@
 @tailwind utilities;
 :root {
   --vh: 100vh;
+  --primary: #1db954;
+  --text-primary: #a1a1a1;
+  --text-primary-lighter: #cfcfcf;
+  --primary-shadow: rgba(29, 185, 84, 0.3) 0px 1px 30px;
+}
+* {
+  box-sizing: border-box;
+}
+.primary-shadow {
+  box-shadow: var(--primary-shadow);
 }
 body {
   margin: 0;
@@ -106,4 +116,25 @@ body::before {
 }
 .nexa {
   font-family: Nexa;
+}
+.gradient-hero {
+  background: linear-gradient(
+    135deg,
+    hsl(0 0% 6%) 0%,
+    hsl(0 0% 8%) 50%,
+    hsl(0 0% 12%) 100%
+  );
+}
+@keyframes pulseGlow {
+  0%,
+  100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.cursor-glow {
+  animation: pulseGlow 2s infinite;
 }
