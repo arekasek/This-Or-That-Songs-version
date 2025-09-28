@@ -1,10 +1,9 @@
 import querystring from "querystring";
 
-export async function GET(req) {
+export async function GET() {
   const client_id = process.env.SPOTIFY_CLIENT_ID;
-  const redirect_uri =
-    "https://this-or-that-songs-version-git-main-arekaseks-projects.vercel.app/callback";
-  const scope = "user-library-read  user-read-private user-read-email";
+  const redirect_uri = process.env.NEXT_PUBLIC_SPOTIFY_REDIRECT_URI;
+  const scope = "user-library-read user-read-private user-read-email";
 
   const url =
     "https://accounts.spotify.com/authorize?" +
