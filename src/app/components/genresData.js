@@ -8,6 +8,7 @@ const genres = [
     name: "Rock",
     description:
       "A genre characterized by a strong beat and often revolves around the electric guitar.",
+    id: "7DgPQwzEoUVfQYBiMLER9Z",
   },
   {
     name: "Daily Song Charts",
