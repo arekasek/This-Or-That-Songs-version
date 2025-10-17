@@ -2,11 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { BsBookmarkHeart } from "react-icons/bs";
-import { FaClockRotateLeft } from "react-icons/fa6";
+import { FaClockRotateLeft, FaRankingStar } from "react-icons/fa6";
 import { LuPartyPopper } from "react-icons/lu";
 import { PiCassetteTape, PiHeadphones, PiCowboyHat } from "react-icons/pi";
 import { GiGuitarBassHead } from "react-icons/gi";
-import { FaRankingStar } from "react-icons/fa6";
 
 const genres = [
   {
@@ -72,6 +71,7 @@ export default function Page() {
   const [spotifyToken, setSpotifyToken] = useState(null);
   const [search, setSearch] = useState("");
   const [trackCount, setTrackCount] = useState(16);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -94,44 +94,466 @@ export default function Page() {
   }, []);
 
   const fetchGenreTracks = async (token, genreQuery) => {
-    const yearRanges = ["1970-1989", "1990-2005", "2006-2015", "2016-2025"];
-    const subQueries = [
-      genreQuery,
-      `${genreQuery} hits`,
-      `${genreQuery} classics`,
-      `${genreQuery} vibes`,
-      `${genreQuery} mix`,
-      `${genreQuery} trending`,
+    const currentYear = new Date().getFullYear();
+
+    const decades = [
+      { start: 1980, end: 1989 },
+      { start: 1990, end: 1999 },
+      { start: 2000, end: 2009 },
+      { start: 2010, end: 2014 },
+      { start: 2015, end: 2019 },
+      { start: 2020, end: currentYear },
     ];
-    const allResults = [];
 
-    for (const year of yearRanges) {
-      for (let i = 0; i < 3; i++) {
-        const randomSub =
-          subQueries[Math.floor(Math.random() * subQueries.length)];
-        const query = `${randomSub} year:${year}`;
-        const url = `https://api.spotify.com/v1/search?q=${encodeURIComponent(
-          query
-        )}&type=track&market=US&limit=50`;
+    const genreArtists = {
+      pop: [
+        "taylor swift",
+        "the weeknd",
+        "sabrina carpenter",
+        "justin bieber",
+        "billie eilish",
+        "ariana grande",
+        "rihanna",
+        "bruno mars",
+        "tate mcrae",
+        "lady gaga",
+        "olivia rodrigo",
+        "dua lipa",
+        "maroon 5",
+        "beyoncé",
+        "adele",
+        "katy perry",
+        "charli xcx",
+        "teddy swims",
+        "sia",
+        "miley cyrus",
+        "halsey",
+        "harry styles",
+        "lorde",
+        "britney spears",
+        "charlie puth",
+        "shawn mendes",
+        "sam smith",
+        "olivia dean",
+        "cigarettes after sex",
+        "the marias",
+        "one direction",
+        "frank ocean",
+        "chappell roan",
+        "gracie abrams",
+        "raye",
+        "noah kahan",
+        "lauv",
+        "the kid laroi",
+        "carly rae jepsen",
+      ],
+      "hip-hop": [
+        "bad bunny",
+        "drake",
+        "travis scott",
+        "kanye west",
+        "kendrick lamar",
+        "eminem",
+        "post malone",
+        "future",
+        "tyler the creator",
+        "playboi carti",
+        "youngboy never broke again",
+        "gunna",
+        "juice wrld",
+        "21 savage",
+        "lil baby",
+        "lil wayne",
+        "lil peep",
+        "50 cent",
+        "asap rocky",
+        "cardi b",
+        "mac miller",
+        "lil uzi vert",
+        "young thug",
+        "bryson tiller",
+        "nicki minaj",
+        "wisin & yandel",
+        "arcángel",
+        "don toliver",
+        "metro boomin",
+        "partynextdoor",
+        "suicideboy$",
+        "blessd",
+        "omar courtz",
+      ],
+      rock: [
+        "coldplay",
+        "linkin park",
+        "radiohead",
+        "imagine dragons",
+        "arctic monkeys",
+        "red hot chili peppers",
+        "queen",
+        "the beatles",
+        "nirvana",
+        "metallica",
+        "deftones",
+        "system of a down",
+        "green day",
+        "oasis",
+        "ac/dc",
+        "guns n' roses",
+        "foo fighters",
+        "the neighbourhood",
+        "twenty one pilots",
+        "fleetwood mac",
+        "the strokes",
+        "tame impala",
+        "gorillaz",
+        "portugal. the man",
+        "foster the people",
+        "cage the elephant",
+        "vampire weekend",
+        "alt-j",
+        "mgmt",
+        "the shins",
+        "broken bells",
+        "glass animals",
+        "kings of leon",
+        "muse",
+        "paramore",
+        "fall out boy",
+        "my chemical romance",
+        "panic! at the disco",
+        "the killers",
+        "the black keys",
+        "arcade fire",
+        "florence + the machine",
+        "the lumineers",
+        "mumford & sons",
+        "of monsters and men",
+        "bon iver",
+        "the national",
+        "interpol",
+        "the white stripes",
+        "jack white",
+        "the raconteurs",
+        "death cab for cutie",
+        "the smashing pumpkins",
+        "soundgarden",
+        "pearl jam",
+        "alice in chains",
+        "stone temple pilots",
+        "tool",
+        "a perfect circle",
+        "nine inch nails",
+        "the cure",
+        "the smiths",
+        "joy division",
+        "new order",
+        "pixies",
+        "dinosaur jr.",
+        "sonic youth",
+        "weezer",
+        "blink-182",
+        "sum 41",
+        "good charlotte",
+        "simple plan",
+        "the offspring",
+        "ramones",
+        "the clash",
+        "sex pistols",
+        "the rolling stones",
+        "led zeppelin",
+        "pink floyd",
+        "the who",
+        "deep purple",
+        "black sabbath",
+        "iron maiden",
+        "judas priest",
+        "motorhead",
+        "slipknot",
+        "korn",
+        "limp bizkit",
+        "evanescence",
+        "within temptation",
+        "nightwish",
+        "apocalyptica",
+        "five finger death punch",
+        "avenged sevenfold",
+        "breaking benjamin",
+        "three days grace",
+        "shinedown",
+        "shadows fall",
+        "killswitch engage",
+        "bullet for my valentine",
+        "bring me the horizon",
+        "parkway drive",
+        "architects",
+        "while she sleeps",
+      ],
+      latin: [
+        "fuerza regida",
+        "rauw alejandro",
+        "junior h",
+        "peso pluma",
+        "j balvin",
+        "feid",
+        "anuel aa",
+        "tito double p",
+        "natanael cano",
+        "ozuna",
+        "daddy yon",
+        "shakira",
+        "manuel turizo",
+        "cris mj",
+        "danny ocean",
+        "farruko",
+        "banda ms de sergio lizárraga",
+        "grupo firme",
+        "duki",
+        "grupo frontera",
+        "carín león",
+        "victor mendivil",
+        "neton vega",
+        "henrique & juliano",
+        "oscar maydon",
+        "luis r conriquez",
+        "la arrolladora banda el limón de rene camacho",
+        "mora",
+      ],
+      rnb: [
+        "sza",
+        "chris brown",
+        "daniel caesar",
+        "kali uchis",
+        "the weeknd",
+        "bryson tiller",
+        "partynextdoor",
+        "frank ocean",
+        "snoh aalegra",
+        "summer walker",
+        "jhene aiko",
+        "dvsn",
+      ],
+      electronic: [
+        "david guetta",
+        "calvin harris",
+        "the chainsmokers",
+        "kygo",
+        "marshmello",
+        "alesso",
+        "zedd",
+        "diplo",
+        "ovy on the drums",
+        "major lazer",
+        "disclosure",
+      ],
+      kpop: [
+        "bts",
+        "kpop demon hunters cast",
+        "stray kids",
+        "twice",
+        "blackpink",
+        "jennie",
+        "jin",
+        "newjeans",
+        "ive",
+        "itzy",
+        "enhypen",
+        "txt",
+        "aespa",
+        "exo",
+        "red velvet",
+      ],
+      country: [
+        "morgan wallen",
+        "luke combs",
+        "zach bryan",
+        "chris stapleton",
+        "blake shelton",
+        "kane brown",
+        "jason aldean",
+        "thomas rhett",
+        "carrie underwood",
+        "miranda lambert",
+        "luke bryan",
+      ],
+      indie: [
+        "tame impala",
+        "lana del rey",
+        "hozier",
+        "phoebe bridgers",
+        "bon iver",
+        "fleet foxes",
+        "the national",
+        "arcade fire",
+        "vampire weekend",
+        "florence + the machine",
+        "beabadoobee",
+      ],
+      bollywood: [
+        "arijit singh",
+        "pritam",
+        "shreya ghoshal",
+        "a.r. rahman",
+        "anirudh ravichander",
+        "alka yagnik",
+        "shreya ghoshal",
+        "udit narayan",
+        "sachin-jigar",
+        "tanishk bagchi",
+        "vishal-shekhar",
+        "amitabh bhattacharya",
+        "irshad kamil",
+        "s.p. balasubrahmanyam",
+        "atif aslam",
+        "karan aujla",
+      ],
+      alternative: [
+        "gorillaz",
+        "portugal. the man",
+        "foster the people",
+        "cage the elephant",
+        "vampire weekend",
+        "alt-j",
+        "mgmt",
+        "the shins",
+        "broken bells",
+        "glass animals",
+      ],
+    };
+    const artists = genreArtists[genreQuery] || [];
 
-        try {
-          const res = await fetch(url, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          if (!res.ok) continue;
-          const data = await res.json();
-          if (data.tracks?.items) allResults.push(...data.tracks.items);
-        } catch {}
-      }
+    const queries = [
+      ...artists.map((artist) => `artist:"${artist}"`),
+      `genre:${genreQuery}`,
+      ...decades
+        .slice(-4)
+        .map((d) => `genre:${genreQuery} year:${d.start}-${d.end}`),
+    ];
+
+    try {
+      const selectedQueries = queries
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 15);
+
+      const responses = await Promise.all(
+        selectedQueries.map((q) =>
+          fetch(
+            `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+              q
+            )}&type=track&market=US&limit=50`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          ).catch(() => null)
+        )
+      );
+
+      const data = await Promise.all(
+        responses.filter((r) => r && r.ok).map((r) => r.json())
+      );
+
+      let allTracks = data.flatMap((d) => d.tracks?.items || []);
+
+      allTracks = allTracks.filter((t) => t.popularity >= 30);
+
+      allTracks = allTracks.filter((track) => {
+        const title = (track.name || "").toLowerCase();
+        const artistNames = (
+          track.artists?.map((a) => a.name).join(" ") || ""
+        ).toLowerCase();
+        const albumName = (track.album?.name || "").toLowerCase();
+
+        const polishChars = /[ąćęłńóśźżĄĆĘŁŃÓŚŹŻ]/;
+        if (
+          polishChars.test(title) ||
+          polishChars.test(artistNames) ||
+          polishChars.test(albumName)
+        ) {
+          return false;
+        }
+
+        const polishWords = ["feat", "ft", "prod", "remix"].some((word) => {
+          const pattern = new RegExp(`${word}\\.?\\s+[A-ZŁŚĆŻĄĘŃÓ]`, "i");
+          return pattern.test(title) || pattern.test(artistNames);
+        });
+
+        if (polishWords) return false;
+
+        const polishKeywords = [
+          "sanah",
+          "dawid podsiadlo",
+          "taco hemingway",
+          "quebonafide",
+          "mata",
+          "young leosia",
+          "bedoes",
+          "solar",
+          "ralph kaminski",
+          "lanberry",
+          "vito bambino",
+          "szpaku",
+          "polish",
+          "poland",
+          "warszawa",
+          "krakow",
+          "wwa",
+        ];
+        if (
+          polishKeywords.some(
+            (keyword) =>
+              artistNames.includes(keyword) || title.includes(keyword)
+          )
+        ) {
+          return false;
+        }
+
+        const markets = track.album?.available_markets || [];
+        const hasInternationalMarket = markets.some((m) =>
+          ["US", "GB", "DE", "FR", "ES", "IT", "CA", "AU"].includes(m)
+        );
+        if (!hasInternationalMarket && markets.includes("PL")) {
+          return false;
+        }
+
+        return true;
+      });
+
+      const uniqueTracks = Array.from(
+        new Map(allTracks.map((t) => [t.id, t])).values()
+      );
+
+      const tracksByArtistAndDecade = {};
+
+      uniqueTracks.forEach((track) => {
+        const artistName = track.artists[0]?.name || "Unknown";
+        const albumYear = track.album?.release_date?.substring(0, 4);
+        const decade = albumYear ? Math.floor(albumYear / 10) * 10 : "unknown";
+        const key = `${artistName}_${decade}`;
+
+        if (!tracksByArtistAndDecade[key]) {
+          tracksByArtistAndDecade[key] = [];
+        }
+        tracksByArtistAndDecade[key].push(track);
+      });
+
+      const diverseTracks = [];
+      Object.values(tracksByArtistAndDecade).forEach((tracks) => {
+        const best = tracks.sort((a, b) => b.popularity - a.popularity)[0];
+        diverseTracks.push(best);
+      });
+
+      const sortedByPopularity = diverseTracks.sort(
+        (a, b) => b.popularity - a.popularity
+      );
+
+      const topTracks = sortedByPopularity.slice(0, 200);
+
+      return topTracks
+        .sort(() => Math.random() - 0.5)
+        .sort(() => Math.random() - 0.5)
+        .sort(() => Math.random() - 0.5);
+    } catch (err) {
+      console.error("fetchGenreTracks error:", err);
+      return [];
     }
-
-    const uniqueTracks = Array.from(
-      new Map(allResults.map((t) => [t.id, t])).values()
-    );
-
-    return uniqueTracks.sort(() => Math.random() - 0.5);
   };
-
   const getRandomTracks = (tracks, count) => {
     const shuffled = [...tracks]
       .sort(() => Math.random() - 0.5)
@@ -142,27 +564,34 @@ export default function Page() {
 
   const handleClick = async (genre) => {
     if (!spotifyToken) return alert("Please connect Spotify first");
+    setLoading(true);
     let tracks = [];
 
     try {
       if (genre.special === "liked") {
         const res = await fetch(
           "https://api.spotify.com/v1/me/tracks?limit=50",
-          { headers: { Authorization: `Bearer ${spotifyToken}` } }
+          {
+            headers: { Authorization: `Bearer ${spotifyToken}` },
+          }
         );
         const data = await res.json();
         tracks = data.items.map((i) => i.track);
       } else if (genre.special === "top") {
         const res = await fetch(
           "https://api.spotify.com/v1/me/top/tracks?limit=50",
-          { headers: { Authorization: `Bearer ${spotifyToken}` } }
+          {
+            headers: { Authorization: `Bearer ${spotifyToken}` },
+          }
         );
         const data = await res.json();
         tracks = data.items;
       } else if (genre.special === "recent") {
         const res = await fetch(
           "https://api.spotify.com/v1/me/player/recently-played?limit=50",
-          { headers: { Authorization: `Bearer ${spotifyToken}` } }
+          {
+            headers: { Authorization: `Bearer ${spotifyToken}` },
+          }
         );
         const data = await res.json();
         tracks = data.items.map((i) => i.track);
@@ -170,14 +599,19 @@ export default function Page() {
         tracks = await fetchGenreTracks(spotifyToken, genre.genreQuery);
       }
 
-      if (!tracks.length) return alert("No tracks found for this category.");
-      const selectedTracks = getRandomTracks(tracks, trackCount);
+      if (!tracks.length) {
+        setLoading(false);
+        return alert("No tracks found for this category.");
+      }
 
+      const selectedTracks = getRandomTracks(tracks, trackCount);
       localStorage.setItem("selected_tracks", JSON.stringify(selectedTracks));
       router.push(`/tournament?genre=${genre.genreQuery || genre.special}`);
     } catch (err) {
       console.error(err);
       alert("Failed to load tracks");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -187,6 +621,12 @@ export default function Page() {
 
   return (
     <div className="min-h-screen h-full flex flex-col gap-4 items-center justify-center relative text-white p-8">
+      {loading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+          <img src="/loading-gif.gif" className="w-[250px]" alt="Loading..." />
+        </div>
+      )}
+
       <div className="gap-6 flex flex-col items-center mb-2">
         <h1 className="text-3xl">
           Choose Your Music{" "}
