@@ -4,6 +4,7 @@ import SpotifyPlayer from "../api/spotify/SpotifyPlayer";
 import ColorThief from "colorthief";
 import { TbRefresh } from "react-icons/tb";
 import { useRouter } from "next/navigation";
+import ProgressBarAnimated from "../components/progressBarAnimated";
 
 export default function Tournament() {
   const [tracks, setTracks] = useState([]);
@@ -13,6 +14,8 @@ export default function Tournament() {
   const [winner, setWinner] = useState(null);
   const [dominantColors, setDominantColors] = useState({});
   const [loading, setLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [totalRounds, setTotalRounds] = useState(0);
   const router = useRouter();
 
   useEffect(() => {
@@ -58,7 +61,15 @@ export default function Tournament() {
 
   const initTournament = async (allTracks) => {
     setLoading(true);
-    const shuffled = [...allTracks].sort(() => Math.random() - 0.5);
+    // Take only first 16 tracks or fill up to 16 if less
+    let tracksList = [...allTracks];
+    if (tracksList.length > 16) {
+      tracksList = tracksList.slice(0, 16);
+    } else if (tracksList.length < 16) {
+      router.push("/");
+      return;
+    }
+    const shuffled = tracksList.sort(() => Math.random() - 0.5);
     setTracks(shuffled);
 
     const colors = {};
@@ -95,7 +106,16 @@ export default function Tournament() {
     const loser = pairings[currentPairIndex].find((t) => t.id !== selected.id);
     const remaining = tracks.filter((t) => t.id !== loser.id);
 
-    if (remaining.length === 1) return setWinner(selected);
+    const matchesInRound = pairings.length;
+    const increment = 100 / matchesInRound; // Each match completes an equal portion of the round
+
+    // Update progress for this match
+    setProgress((prev) => Math.min(100, prev + increment));
+
+    if (remaining.length === 1) {
+      setProgress(100);
+      return setWinner(selected);
+    }
 
     if (currentPairIndex + 1 >= pairings.length) {
       setRound((prev) => prev + 1);
@@ -103,6 +123,7 @@ export default function Tournament() {
         setTracks(remaining);
         setPairings(generatePairings(remaining));
         setCurrentPairIndex(0);
+        setProgress(0); // Reset progress bar for new round
       }, 300);
     } else {
       setTracks(remaining);
@@ -128,7 +149,7 @@ export default function Tournament() {
     rgb ? `rgba(${rgb.match(/\d+/g).join(",")},${a})` : `rgba(29,185,84,${a})`;
 
   return (
-    <main className="flex min-h-screen flex-col sm:flex-row items-center justify-center relative">
+    <main className="flex min-h-screen flex-col sm:flex-row items-center justify-center relative p-4">
       {loading && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
           <img src="/loading-gif.gif" className="w-[250px]" />
@@ -136,27 +157,28 @@ export default function Tournament() {
       )}
 
       {!loading && winner ? (
-        <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-md z-10">
-          <h2 className="text-2xl font-semibold mb-4 text-black">
-            Final Winner!
-          </h2>
-          <img
-            src={winner.album?.images?.[0]?.url}
-            alt={winner.name}
-            className="w-48 h-48 object-cover rounded-md mb-4"
-          />
-          <p className="text-xl font-semibold mb-4 text-black">{winner.name}</p>
-          <SpotifyPlayer trackId={winner.id} />
+        <div className="absolute w-screen flex items-center justify-center h-screen top-0 z-50 bg-black/80 backdrop-blur-sm inset-0 text-white">
+          <div className="flex flex-col items-center justify-center p-6 rounded-2xl shadow-md z-10 bg-white/50">
+            <h2 className="text-2xl font-semibold mb-4">Final Winner!</h2>
+            <img
+              src={winner.album?.images?.[0]?.url}
+              alt={winner.name}
+              className="w-48 h-48 object-cover rounded-md mb-4"
+            />
+            <p className="text-xl font-semibold mb-4 text-black">
+              {winner.name}
+            </p>
+            <div className="w-full">
+              <SpotifyPlayer trackId={winner.id} />
+            </div>
+          </div>
         </div>
       ) : !loading && currentPair ? (
-        <div className="flex w-full h-full flex-col justify-evenly items-center sm:flex-row">
+        <div className="flex xl:w-3/5 w-full h-full sm:flex-row flex-col gap-12 items-center justify-center">
           {currentPair.map((track) => (
-            <div
-              key={track.id}
-              className="flex justify-center w-full h-auto items-center p-10"
-            >
+            <div key={track.id} className="flex-1 h-auto">
               <div
-                className="flex-col flex p-8 border-white/10 border rounded-xl xl:w-3/5 w-full h-fit sm:mx-2 my-8 transition duration-500"
+                className="flex flex-col sm:p-8 p-2 border-white/10 border rounded-xl w-full h-fit transition duration-500"
                 onMouseEnter={(e) =>
                   (e.currentTarget.style.boxShadow = `0px 5px 15px 0px ${
                     dominantColors[track.id] || "rgb(0,0,0)"
@@ -188,10 +210,6 @@ export default function Tournament() {
         <p className="text-lg text-gray-400">No more tracks to display</p>
       )}
 
-      <img
-        src="/vs1.png"
-        className="absolute top-1/2 h-32 w-32 object-contain -translate-y-1/2 z-0 select-none pointer-events-none"
-      />
       <button
         onClick={handleRefresh}
         className="px-4 py-2 gap-2 mt-4 sm:fixed sm:bottom-24 w-full sm:w-auto z-10 flex items-center justify-center rounded-md text-black bg-[var(--primary)]"
@@ -199,9 +217,9 @@ export default function Tournament() {
         <TbRefresh className="text-xl" /> Refresh Songs
       </button>
 
-      <h1 className="absolute hidden sm:block sm:fixed sm:top-24 z-10 text-white text-6xl font-extrabold">
-        {getRoundLabel()}
-      </h1>
+      <div className="absolute w-1/3 sm:top-24 z-10 text-white text-6xl font-extrabold flex items-center justify-center">
+        <ProgressBarAnimated text={getRoundLabel()} processed={progress} />
+      </div>
     </main>
   );
 }
