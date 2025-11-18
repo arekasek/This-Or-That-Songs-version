@@ -5,7 +5,7 @@ import ColorThief from "colorthief";
 import { TbRefresh } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import ProgressBarAnimated from "../components/progressBarAnimated";
-import Loader from "../components/loader";
+import Loader from "../components/Loader";
 
 export default function Tournament() {
   const [tracks, setTracks] = useState([]);

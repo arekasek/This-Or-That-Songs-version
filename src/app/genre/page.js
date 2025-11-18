@@ -8,7 +8,7 @@ import { PiCassetteTape, PiHeadphones, PiCowboyHat } from "react-icons/pi";
 import { GiGuitarBassHead } from "react-icons/gi";
 import { decades, genreArtists } from "../components/artistsByGenre";
 import { LuStar } from "react-icons/lu";
-import Loader from "../components/loader";
+import Loader from "../components/Loader";
 
 const genres = [
   {
