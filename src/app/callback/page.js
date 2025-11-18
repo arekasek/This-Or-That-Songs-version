@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Loader from "../components/loader";
+import Loader from "../components/Loader";
 
 export default function Callback() {
   const router = useRouter();
