@@ -5,6 +5,7 @@ import ColorThief from "colorthief";
 import { TbRefresh } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import ProgressBarAnimated from "../components/progressBarAnimated";
+import Loader from "../components/loader";
 
 export default function Tournament() {
   const [tracks, setTracks] = useState([]);
@@ -150,11 +151,7 @@ export default function Tournament() {
 
   return (
     <main className="flex min-h-screen flex-col sm:flex-row items-center justify-center relative p-4">
-      {loading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-          <img src="/loading-gif.gif" className="w-[250px]" />
-        </div>
-      )}
+      {loading && <Loader />}
 
       {!loading && winner ? (
         <div className="absolute w-screen flex items-center justify-center h-screen top-0 z-50 bg-black/80 backdrop-blur-sm inset-0 text-white">

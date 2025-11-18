@@ -7,6 +7,8 @@ import { LuPartyPopper } from "react-icons/lu";
 import { PiCassetteTape, PiHeadphones, PiCowboyHat } from "react-icons/pi";
 import { GiGuitarBassHead } from "react-icons/gi";
 import { decades, genreArtists } from "../components/artistsByGenre";
+import { LuStar } from "react-icons/lu";
+import Loader from "../components/loader";
 
 const genres = [
   {
@@ -22,6 +24,13 @@ const genres = [
     color: "from-blue-200 to-green-500",
     description: "Your 16 top songs of all time.",
     special: "top",
+  },
+  {
+    name: "Your recommendations",
+    icon: <LuStar />,
+    color: "from-red-500 to-orange-200",
+    description: "Spotify recommendations.",
+    special: "charts",
   },
   {
     name: "Recently Played",
@@ -297,11 +306,7 @@ export default function Page() {
 
   return (
     <div className="min-h-screen h-full flex flex-col gap-4 items-center justify-center relative text-white p-8">
-      {loading && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-          <img src="/loading-gif.gif" className="w-[250px]" alt="Loading..." />
-        </div>
-      )}
+      {loading && <Loader />}
 
       <div className="gap-6 flex flex-col items-center mb-2">
         <h1 className="text-3xl">

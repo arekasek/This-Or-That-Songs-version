@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Loader from "../components/loader";
 
 export default function Callback() {
   const router = useRouter();
@@ -25,5 +26,5 @@ export default function Callback() {
     }
   }, [router]);
 
-  return <p className="text-white">Logging in...</p>;
+  return <Loader />;
 }
